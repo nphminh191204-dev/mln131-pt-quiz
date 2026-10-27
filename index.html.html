@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MLN131 Quiz Pro - Ôn Tập Chủ Nghĩa Xã Hội Khoa Học (Chương 1, 2, 3)</title>
+  <meta name="description" content="Hệ thống ôn tập trắc nghiệm Chủ nghĩa xã hội khoa học (MLN131) - Chương 1, 2, 3 có lọc câu sai, thi thử đếm ngược và phím tắt." />
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-soft: #eff6ff;
+      --success: #16a34a;
+      --success-bg: #dcfce7;
+      --danger: #dc2626;
+      --danger-bg: #fee2e2;
+      --warning: #d97706;
+      --warning-bg: #fef3c7;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+    }
+    [data-theme="dark"] {
+      --primary: #3b82f6;
+      --primary-hover: #60a5fa;
+      --primary-soft: #1e293b;
+      --success: #22c55e;
+      --success-bg: rgba(34, 197, 94, 0.16);
+      --danger: #ef4444;
+      --danger-bg: rgba(239, 68, 68, 0.16);
+      --warning: #f59e0b;
+      --warning-bg: rgba(245, 158, 11, 0.18);
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --border: #334155;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      transition: background 0.2s, color 0.2s;
+      padding-bottom: 50px;
+    }
+    header {
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: #fff;
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .header-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .brand h1 { font-size: 1.25rem; font-weight: 700; }
+    .brand p { font-size: 0.82rem; opacity: 0.9; }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .timer-pill {
+      background: rgba(255,255,255,0.18);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      display: none;
+    }
+    .progress-bar-wrap {
+      width: 100%;
+      height: 5px;
+      background: rgba(255,255,255,0.2);
+      margin-top: 12px;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: #38bdf8;
+      width: 0%;
+      transition: width 0.25s ease;
+    }
+    .container {
+      max-width: 1180px;
+      margin: 20px auto;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: 1fr 330px;
+      gap: 20px;
+    }
+    @media (max-width: 900px) {
+      .container { grid-template-columns: 1fr; }
+    }
+    .toolbar {
+      grid-column: 1 / -1;
+      background: var(--card);
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    select, input[type="text"], button {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      font-size: 0.88rem;
+      outline: none;
+      transition: all 0.15s;
+    }
+    input[type="text"] { min-width: 210px; }
+    input[type="text"]:focus, select:focus { border-color: var(--primary); }
+    button { cursor: pointer; font-weight: 500; }
+    button:hover:not(:disabled) { filter: brightness(0.95); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .btn-success { background: var(--success); color: #fff; border-color: var(--success); }
+    .btn-warning { background: var(--warning); color: #fff; border-color: var(--warning); }
+    .btn-danger { background: var(--danger); color: #fff; border-color: var(--danger); }
+    .quiz-card {
+      background: var(--card);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .question-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.78rem;
+      background: var(--primary-soft);
+      color: var(--primary);
+      border: 1px solid var(--border);
+    }
+    .badge.multi {
+      background: var(--warning-bg);
+      color: var(--warning);
+    }
+    .star-btn {
+      border: 1px solid var(--border);
+      background: transparent;
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+    }
+    .star-btn.starred {
+      background: var(--warning-bg);
+      color: var(--warning);
+      border-color: var(--warning);
+      font-weight: 700;
+    }
+    .question-title {
+      font-size: 1.14rem;
+      font-weight: 600;
+      margin-bottom: 18px;
+    }
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .option-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 13px 15px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .option-item:hover { border-color: var(--primary); }
+    .option-item.selected {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+    }
+    .option-item.correct {
+      border-color: var(--success);
+      background: var(--success-bg);
+      font-weight: 600;
+    }
+    .option-item.wrong {
+      border-color: var(--danger);
+      background: var(--danger-bg);
+    }
+    .option-key {
+      min-width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: var(--border);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.84rem;
+      flex-shrink: 0;
+    }
+    .option-item.selected .option-key { background: var(--primary); color: #fff; }
+    .option-item.correct .option-key { background: var(--success); color: #fff; }
+    .option-item.wrong .option-key { background: var(--danger); color: #fff; }
+    .feedback-box {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      font-size: 0.92rem;
+      display: none;
+    }
+    .feedback-box.show { display: block; }
+    .feedback-box.ok { background: var(--success-bg); border: 1px solid var(--success); }
+    .feedback-box.err { background: var(--danger-bg); border: 1px solid var(--danger); }
+    .nav-actions {
+      margin-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    .shortcut-hint {
+      margin-top: 12px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-align: center;
+    }
+    .sidebar {
+      background: var(--card);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      height: fit-content;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+    .stat-box {
+      padding: 8px 4px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 0.75rem;
+    }
+    .stat-box strong { display: block; font-size: 1.05rem; margin-top: 2px; }
+    .question-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      max-height: 370px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .q-btn {
+      padding: 7px 0;
+      text-align: center;
+      font-size: 0.78rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      position: relative;
+    }
+    .q-btn.active { outline: 2px solid var(--primary); font-weight: 700; }
+    .q-btn.done-ok { background: var(--success-bg); border-color: var(--success); }
+    .q-btn.done-err { background: var(--danger-bg); border-color: var(--danger); }
+    .q-btn.done-wait { background: var(--primary-soft); border-color: var(--primary); }
+    .q-btn .star-dot {
+      position: absolute;
+      top: 1px;
+      right: 3px;
+      font-size: 0.6rem;
+      color: var(--warning);
+    }
+    .flashcard-box {
+      padding: 28px 20px;
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <h1>🎓 MLN131 QUIZ PRO — CHỦ NGHĨA XÃ HỘI KHOA HỌC</h1>
+      <p>121 Câu hỏi Chương 1, 2, 3 • Tự động lưu tiến độ • Hỗ trợ phím tắt</p>
+    </div>
+    <div class="header-controls">
+      <div class="timer-pill" id="timerDisplay">⏱ 60:00</div>
+      <button id="themeToggleBtn">🌙 Giao diện tối</button>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="topProgressBar"></div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="toolbar">
+    <div class="filter-group">
+      <select id="chapterFilter">
+        <option value="all">📚 Tất cả chương (121 câu)</option>
+        <option value="1">Chương 1: Nhập môn CNXHKH (33 câu)</option>
+        <option value="2">Chương 2: Sứ mệnh lịch sử của GCCN (40 câu)</option>
+        <option value="3">Chương 3: CNXH và Thời kỳ quá độ (48 câu)</option>
+      </select>
+
+      <select id="statusFilter">
+        <option value="all">🔍 Tất cả trạng thái</option>
+        <option value="unanswered">⏳ Câu chưa làm</option>
+        <option value="wrong">❌ Câu làm SAI</option>
+        <option value="starred">⭐ Câu đã đánh dấu sao</option>
+      </select>
+
+      <select id="modeSelect">
+        <option value="practice">🎯 Chế độ: Ôn tập (Chấm ngay)</option>
+        <option value="flashcard">🗂️ Chế độ: Flashcard (Lật thẻ)</option>
+        <option value="exam60">📝 Thi thử FE (60 câu / 60 phút)</option>
+        <option value="exam20">⚡ Thi thử PT (20 câu / 20 phút)</option>
+      </select>
+
+      <input type="text" id="searchInput" placeholder="🔎 Tìm từ khóa câu hỏi..." />
+    </div>
+
+    <div class="filter-group">
+      <button id="shuffleBtn">🔀 Trộn câu</button>
+      <button id="resetBtn">🗑️ Xóa lịch sử làm</button>
+      <button id="submitExamBtn" class="btn-success" style="display:none;">✅ Nộp bài thi</button>
+    </div>
+  </div>
+
+  <main class="quiz-card">
+    <div>
+      <div class="question-meta">
+        <div>
+          <span class="badge" id="chapterBadge">Chương 1</span>
+          <span class="badge multi" id="multiBadge" style="display:none;">Chọn nhiều đáp án</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <button class="star-btn" id="starBtn" onclick="toggleStar()">☆ Đánh dấu</button>
+          <span id="progressText" style="font-size:0.88rem; color:var(--muted);">Câu 1 / 121</span>
+        </div>
+      </div>
+
+      <div class="question-title" id="questionText"></div>
+      <div class="options-list" id="optionsList"></div>
+
+      <div id="multiActionWrap" style="margin-top: 14px; display:none;">
+        <button id="checkMultiBtn" class="btn-primary">✔️ Kiểm tra đáp án (Space)</button>
+      </div>
+
+      <div class="feedback-box" id="feedbackBox"></div>
+    </div>
+
+    <div>
+      <div class="nav-actions">
+        <button id="prevBtn">⬅ Câu trước (←)</button>
+        <button id="retryOneBtn">↺ Làm lại câu này</button>
+        <button id="showAnswerBtn">💡 Xem đáp án</button>
+        <button id="nextBtn" class="btn-primary">Câu tiếp (→) ➡</button>
+      </div>
+      <div class="shortcut-hint">
+        ⌨️ Phím tắt: <strong>1-4</strong> hoặc <strong>A-D</strong> chọn đáp án • <strong>←/→</strong> chuyển câu • <strong>Space</strong> kiểm tra/xem đáp án • <strong>S</strong> đánh dấu sao
+      </div>
+    </div>
+  </main>
+
+  <aside class="sidebar">
+    <h3 style="font-size: 0.98rem; margin-bottom: 10px;">📊 Thống kê bộ câu hỏi hiện tại</h3>
+    <div class="stats-grid">
+      <div class="stat-box">Đã làm<strong id="statDone">0</strong></div>
+      <div class="stat-box" style="color:var(--success)">Đúng<strong id="statCorrect">0</strong></div>
+      <div class="stat-box" style="color:var(--danger)">Sai<strong id="statWrong">0</strong></div>
+      <div class="stat-box" style="color:var(--warning)">Sao ⭐<strong id="statStar">0</strong></div>
+    </div>
+    <div class="question-grid" id="questionGrid"></div>
+  </aside>
+</div>
+
+<script>
+const QUESTIONS = [
+  // ================= CHƯƠNG 1 (Câu 1 - 33) =================
+  {id:1, ch:1, q:"Theo nghĩa rộng, chủ nghĩa xã hội khoa học được hiểu là gì?", a:"Là một trong ba bộ phận hợp thành chủ nghĩa Mác - Lênin", b:"Là chủ nghĩa Mác - Lênin, luận giải từ các giác độ triết học, kinh tế học chính trị và chính trị - xã hội về sự chuyển biến tất yếu của xã hội loài người từ chủ nghĩa tư bản lên chủ nghĩa xã hội và chủ nghĩa cộng sản", c:"Là một học thuyết trình bày sự ra đời, phát triển và suy vong của chủ nghĩa tư bản", d:"Là một hình thái kinh tế - xã hội trong tiến trình lịch sử tự nhiên của loài người", ans:["B"]},
+  {id:2, ch:1, q:"Ba bộ phận hợp thành chủ nghĩa Mác - Lênin là gì?", a:"Triết học Mác - Lênin, Kinh tế chính trị Mác - Lênin và Chủ nghĩa xã hội không tưởng phê phán", b:"Kinh tế chính trị Mác - Lênin, Tư tưởng Hồ Chí Minh và Chủ nghĩa xã hội không tưởng phê phán", c:"Triết học Mác - Lênin, Tư tưởng Hồ Chí Minh và Kinh tế chính trị học cổ điển Anh", d:"Triết học Mác - Lênin, Kinh tế chính trị Mác - Lênin và Chủ nghĩa xã hội khoa học", ans:["D"]},
+  {id:3, ch:1, q:"Đánh giá sau được trích trong tác phẩm nào: “tác phẩm chủ yếu và cơ bản ấy trình bày chủ nghĩa xã hội khoa học... những yếu tố từ đó nảy sinh ra chế độ tương lai”?", a:"Chống Đuyrinh", b:"Đường Kách mệnh", c:"Tuyên ngôn của Đảng Cộng sản", d:"Tư bản", ans:["D"], note:"V.I. Lênin đánh giá khái quát bộ Tư bản."},
+  {id:4, ch:1, q:"Đâu là một trong những điều kiện ra đời chủ nghĩa xã hội khoa học?", a:"Điều kiện kinh tế - xã hội", b:"Điều kiện văn hóa - xã hội", c:"Điều kiện chính trị - xã hội", d:"Điều kiện khoa học", ans:["A"]},
+  {id:5, ch:1, q:"“Sống có việc làm hay là chết trong đấu tranh” là khẩu hiệu của giai cấp công nhân ở đâu?", a:"Công xã Pari", b:"Vương Quốc Anh", c:"Đức", d:"Nhà máy dệt Lion (Pháp)", ans:["D"]},
+  {id:6, ch:1, q:"Các khẩu hiệu “sống có việc làm hay là chết trong đấu tranh” (1831) và “cộng hòa hay là chết” (1834) xuất hiện trong phong trào đấu tranh của công nhân dệt ở Lion (Pháp) có ý nghĩa gì?", a:"Phong trào đấu tranh của giai cấp công nhân đã chuyển từ mục đích kinh tế sang mục đích chính trị", b:"Phong trào đấu tranh của giai cấp công nhân đã có lý luận soi đường", c:"Phong trào đấu tranh của giai cấp công nhân đã có những thắng lợi to lớn", d:"Phong trào đấu tranh của giai cấp công nhân chuyển từ tự phát sang tự giác", ans:["A"]},
+  {id:7, ch:1, q:"Đâu là tiền đề khoa học tự nhiên cho sự ra đời của chủ nghĩa xã hội khoa học?", a:"Học thuyết tiến hóa", b:"Học thuyết tế bào", c:"Định luật bảo toàn và chuyển hóa năng lượng", d:"Tất cả các đáp án đều đúng", ans:["D"]},
+  {id:8, ch:1, q:"Đâu KHÔNG phải là tiền đề khoa học tự nhiên cho sự ra đời của chủ nghĩa xã hội khoa học?", a:"Học thuyết tiến hóa", b:"Học thuyết tế bào", c:"Định luật bảo toàn và chuyển hóa năng lượng", d:"Chủ nghĩa xã hội không tưởng của Pháp", ans:["D"], note:"Chủ nghĩa xã hội không tưởng Pháp là tiền đề tư tưởng lý luận."},
+  {id:9, ch:1, q:"Tư duy của Nhà triết học nào được xem là “cái hạt nhân” hợp lý của phép biện chứng?", a:"V.I.Lênin", b:"C.Mác", c:"G.V.Ph.Hêghen", d:"Ph.Ăngghen", ans:["C"]},
+  {id:10, ch:1, multi:true, q:"(Multiple Choice) Đâu là các đại biểu của chủ nghĩa xã hội không tưởng phê phán Pháp? Lựa chọn các đáp án đúng.", a:"Xanh Ximông", b:"S. Phurie", c:"R. Oen", d:"Ph. Hêghen", ans:["A","B"], note:"Xanh Ximông và S. Phuriê là đại biểu ở Pháp; R. Oen là đại biểu ở Anh."},
+  {id:11, ch:1, q:"Đâu không phải là hạn chế của chủ nghĩa xã hội không tưởng Pháp?", a:"Không chỉ ra được những biện pháp để hiện thực hóa học thuyết của mình", b:"Không phát hiện ra quy luật vận động, phát triển của xã hội loài người nói chung và xã hội tư bản chủ nghĩa nói riêng", c:"Không phát hiện ra sứ mệnh lịch sử của giai cấp công nhân", d:"Không biết được vai trò của nô lệ trong cách mạng xã hội", ans:["D"]},
+  {id:12, ch:1, multi:true, q:"(Multiple Choice) Trong giai đoạn 1843 - 1844, C. Mác và Ph. Ăngghen đã chuyển biến lập trường của mình như thế nào?", a:"Từ thế giới quan duy tâm sang thế giới quan duy vật", b:"Từ lập trường dân chủ cách mạng sang lập trường cộng sản chủ nghĩa", c:"Từ lập trường cách mạng dân chủ sang lập trường dân tộc chủ nghĩa", d:"Từ phương pháp luận siêu hình sang phương pháp luận biện chứng", ans:["A","B"]},
+  {id:13, ch:1, q:"Ba phát kiến vĩ đại của C.Mác và Ph.Ăngghen là gì?", a:"Chủ nghĩa duy vật, Chủ nghĩa duy vật lịch sử, Học thuyết về giá trị thặng dư", b:"Chủ nghĩa duy vật lịch sử, Chủ nghĩa duy tâm biện chứng, Học thuyết về giá trị thặng dư", c:"Học thuyết giá trị thặng dư, Chủ nghĩa duy vật lịch sử, Phép biện chứng duy tâm", d:"Chủ nghĩa duy vật lịch sử, Học thuyết về giá trị thặng dư, Học thuyết về sứ mệnh lịch sử toàn thế giới của giai cấp công nhân", ans:["D"]},
+  {id:14, ch:1, q:"Một trong ba phát kiến vĩ đại của C.Mác và Ph.Ăngghen là gì?", a:"Thành lập quốc tế cộng sản", b:"Ủng hộ nhân dân lao động", c:"Học thuyết về sứ mệnh lịch sử toàn thế giới của giai cấp công nhân", d:"Nhận định và tìm ra mâu thuẫn giai cấp trong xã hội", ans:["C"]},
+  {id:15, ch:1, q:"Phát kiến học thuyết giá trị thặng dư của C.Mác và Ph.Ăngghen có ý nghĩa gì đối với chủ nghĩa xã hội khoa học?", a:"Chỉ ra sự suy vong tự nhiên của chủ nghĩa tư bản", b:"Chỉ ra con đường đấu tranh giai cấp tiến lên chủ nghĩa xã hội", c:"Khẳng định về phương diện kinh tế sự diệt vong không thể tránh khỏi của chủ nghĩa tư bản và sự ra đời tất yếu của chủ nghĩa xã hội", d:"Khẳng định sự thiết lập nền chuyên chính vô sản bằng cách mạng xã hội là con đường duy nhất tiến đến chủ nghĩa xã hội", ans:["C"]},
+  {id:16, ch:1, q:"Phát kiến nào của C.Mác và Ph.Ăngghen đã khắc phục triệt để được những hạn chế có tính lịch sử của chủ nghĩa xã hội không tưởng Pháp?", a:"Học thuyết về sứ mệnh lịch sử toàn thế giới của giai cấp công nhân", b:"Chủ nghĩa duy vật lịch sử", c:"Học thuyết về giá trị thặng dư", d:"Chủ nghĩa duy vật biện chứng", ans:["A"]},
+  {id:17, ch:1, q:"Tác phẩm nào được xem là tác phẩm kinh điển chủ yếu, đánh dấu sự ra đời của chủ nghĩa xã hội khoa học?", a:"Tuyên ngôn của Đảng Cộng sản", b:"Tình cảnh nước Anh / Ngày 18 tháng Sương mù", c:"Bộ Tư bản / Lược khảo khoa Kinh tế - Chính trị", d:"Góp phần phê phán triết học pháp quyền của Hêghen - Lời nói đầu", ans:["A"]},
+  {id:18, ch:1, q:"C.Mác và Ph.Ăngghen đánh giá: “Giai cấp tư sản trong quá trình thống trị giai cấp chưa đầy một thế kỉ đã tạo ra một lực lượng sản xuất nhiều hơn và đồ sộ hơn lực lượng của tất cả các thế hệ trước đây gộp lại” trong tác phẩm nào?", a:"Chống Đuyrinh", b:"Lược khảo khoa kinh tế - chính trị", c:"Tuyên ngôn của Đảng Cộng sản", d:"Bộ Tư bản", ans:["C"]},
+  {id:19, ch:1, q:"Điền cụm từ thích hợp vào (...): “Giai cấp ..., trong quá trình thống trị giai cấp chưa đầy một thế kỷ, đã tạo ra những ... nhiều hơn và đồ sộ hơn lực lượng sản xuất của tất cả các thế hệ trước kia gộp lại”.", a:"Tư sản/ Lực lượng sản xuất", b:"Tư sản/ Quan hệ sản xuất", c:"Vô sản/ Tư sản", d:"Vô sản/ Giai cấp nông dân", ans:["A"]},
+  {id:20, ch:1, q:"Sự kiện gì được xem là cuộc cách mạng vô sản đầu tiên trên thế giới xóa bỏ được giai cấp tư sản và thiết lập chính quyền của giai cấp vô sản?", a:"Công xã Pari", b:"Phong trào Hiến chương Anh", c:"Cách mạng tháng Mười Nga", d:"Sự ra đời của Quốc tế I", ans:["A"], note:"Công xã Pari 1871 là hình thái nhà nước chuyên chính vô sản đầu tiên."},
+  {id:21, ch:1, q:"Ai đã đánh giá về chủ nghĩa của C. Mác là: “Học thuyết của Mác là học thuyết vạn năng vì nó là một học thuyết chính xác”?", a:"V.I.Lênin", b:"Ph.Ăngghen", c:"Chủ tịch Hồ Chí Minh", d:"J.Xtalin", ans:["A"]},
+  {id:22, ch:1, q:"Ai đã đưa ra quan niệm “chủ nghĩa xã hội là sự phản kháng và đấu tranh chống sự bóc lột người lao động, một cuộc đấu tranh nhằm hoàn toàn xóa bỏ sự bóc lột”?", a:"S.Phuriê", b:"V.I.Lênin", c:"Ph.Ăngghen", d:"C.Mác", ans:["B"]},
+  {id:23, ch:1, q:"Sự kiện gì đánh dấu việc V.I.Lênin đã biến chủ nghĩa xã hội từ khoa học, lý luận thành hiện thực?", a:"Sự ra đời của nhà nước Nga", b:"Sự chiến thắng của nước Nga trong giai đoạn chiến tranh thế giới", c:"Cách mạng tháng 10 Nga năm 1917 thành công và sự ra đời của Nhà nước Xôviết", d:"Lênin qua đời năm 1924 và sự kế vị của J. Xtalin", ans:["C"]},
+  {id:24, ch:1, q:"Khẩu hiệu / Câu nói: “Vô sản tất cả các nước và các dân tộc bị áp bức, đoàn kết lại!” là của ai?", a:"V.I.Lênin", b:"Chủ tịch Hồ Chí Minh", c:"C.Mác", d:"Ph.Ăngghen", ans:["A"]},
+  {id:25, ch:1, q:"Từ sau khi V.I.Lênin mất đến năm 1953, ai là người có ảnh hưởng trực tiếp trong việc vận dụng và phát triển chủ nghĩa xã hội khoa học?", a:"J.Xtalin", b:"G.Đi-mi-trốp", c:"S.Phuriê", d:"S.Simon", ans:["A"]},
+  {id:26, ch:1, q:"Sau Hội nghị Mátxcơva (1960), hoạt động lý luận và thực tiễn của Đảng Cộng sản và công nhân như thế nào?", a:"Không phát triển", b:"Tăng cường hơn trước", c:"Bị chủ nghĩa tư bản thủ tiêu", d:"Chỉ có công nhân phát triển", ans:["B"]},
+  {id:27, ch:1, q:"Sau khi chế độ xã hội chủ nghĩa Liên Xô và Đông Âu sụp đổ, chủ nghĩa xã hội khoa học được bổ sung và phát triển như thế nào?", a:"Được giới trí thức thế giới nghiên cứu như một học thuyết đã lỗi thời", b:"Được các nước xã hội chủ nghĩa bổ sung và phát triển trong tình hình mới, phù hợp với bối cảnh từng nước", c:"Các nước tư bản chủ nghĩa nghiên cứu chủ nghĩa xã hội khoa học như một học thuyết nhằm khắc phục các khuyết tật của thời đại mới", d:"Được dung hòa cùng với các học thuyết tư sản khác", ans:["B"]},
+  {id:28, ch:1, q:"Công cuộc đổi mới do Đảng Cộng sản Việt Nam khởi xướng và lãnh đạo tại Đại hội lần thứ bao nhiêu?", a:"Lần thứ IV", b:"Lần thứ VI", c:"Lần thứ X", d:"Lần thứ XIII", ans:["B"]},
+  {id:29, ch:1, q:"Đối tượng nghiên cứu của chủ nghĩa xã hội khoa học là gì?", a:"Là những quy luật, tính quy luật chính trị - xã hội của quá trình phát sinh, hình thành và phát triển của hình thái kinh tế - xã hội cộng sản chủ nghĩa", b:"Là những quy luật, tính quy luật chính trị - xã hội của quá trình phát sinh, hình thành và phát triển của hình thái kinh tế - xã hội xã hội chủ nghĩa", c:"Là những quy luật, tính quy luật chính trị - xã hội của quá trình phát sinh, hình thành và phát triển của hình thái kinh tế - xã hội tư bản chủ nghĩa", d:"Là những quy luật, tính quy luật chính trị - xã hội của quá trình phát sinh, hình thành và phát triển của hình thái kinh tế - xã hội tư bản chủ nghĩa và cộng sản chủ nghĩa", ans:["A"]},
+  {id:30, ch:1, q:"Chủ nghĩa xã hội khoa học có chức năng giác ngộ và hướng dẫn giai cấp công nhân thực hiện sứ mệnh lịch sử của mình trong thời kỳ nào?", a:"Thời kỳ đấu tranh lật đổ sự thống trị của giai cấp tư sản, giành chính quyền, xây dựng chủ nghĩa xã hội", b:"Thời kỳ đấu tranh lật đổ sự thống trị của giai cấp địa chủ, giành chính quyền, xây dựng chủ nghĩa xã hội", c:"Thời kỳ đấu tranh lật đổ sự thống trị của giai cấp tư sản, giành chính quyền", d:"Thời kỳ đấu tranh lật đổ sự thống trị của giai cấp chủ nô, giành chính quyền, xây dựng chủ nghĩa xã hội", ans:["A"]},
+  {id:31, ch:1, q:"Chủ nghĩa xã hội khoa học sử dụng phương pháp luận nào?", a:"Chủ nghĩa duy vật biện chứng và chủ nghĩa duy vật lịch sử", b:"Chủ nghĩa duy vật siêu hình và chủ nghĩa duy vật lịch sử", c:"Chủ nghĩa duy vật chất phác và chủ nghĩa duy vật lịch sử", d:"Chủ nghĩa duy tâm biện chứng và chủ nghĩa duy vật lịch sử", ans:["A"]},
+  {id:32, ch:1, q:"Đáp án nào không phải là một phương pháp nghiên cứu của chủ nghĩa xã hội khoa học?", a:"Phương pháp trừu tượng hóa khoa học", b:"Phương pháp kết hợp lịch sử và logic", c:"Phương pháp khảo sát và phân tích về mặt chính trị - xã hội", d:"Phương pháp so sánh", ans:["A"]},
+  {id:33, ch:1, q:"Về mặt thực tiễn, đâu không phải là một ý nghĩa của việc nghiên cứu chủ nghĩa xã hội khoa học?", a:"Thấy rõ khoảng cách giữa lý luận chủ nghĩa xã hội khoa học và thực tiễn vận dụng nó", b:"Sự sụp đổ của Liên Xô và Đông Âu là do đã nhận thức và hành động trên nhiều vấn đề trái với chủ nghĩa xã hội khoa học, trái với chủ nghĩa Mác - Lênin chứ không phải là do đi theo chủ nghĩa xã hội khoa học làm cho các nước này khủng hoảng", c:"Cần có bản lĩnh vững vàng, sáng suốt và sáng tạo trong việc vận dụng chủ nghĩa xã hội khoa học vào bối cảnh lịch sử cụ thể của từng quốc gia, tránh giáo điều, bảo thủ, duy ý chí", d:"Giúp chúng ta có căn cứ nhận thức khoa học để luôn cảnh giác, phân tích đúng và đấu tranh chống lại những nhận thức sai lệch về chủ nghĩa xã hội", ans:["D"], note:"Đáp án D là ý nghĩa về mặt lý luận."},
+
+  // ================= CHƯƠNG 2 (Câu 34 - 73) =================
+  {id:34, ch:2, q:"Thuật ngữ “giai cấp công nhân” được các nhà kinh điển xác định theo bao nhiêu phương diện cơ bản?", a:"2", b:"3", c:"4", d:"5", ans:["A"], note:"2 phương diện: Kinh tế - xã hội và Chính trị - xã hội."},
+  {id:35, ch:2, q:"Cùng với sự phát triển của đại công nghiệp, các giai cấp khác đều suy tàn và tiêu vong, giai cấp nào là sản phẩm của bản thân nền đại công nghiệp (con đẻ của nền đại công nghiệp tư bản chủ nghĩa, đại biểu cho lực lượng sản xuất tiên tiến)?", a:"Giai cấp công nhân", b:"Giai cấp nông dân", c:"Giai cấp tư sản", d:"Giai cấp chủ nô / Nô lệ", ans:["A"]},
+  {id:36, ch:2, q:"Xét trên phương diện kinh tế - xã hội, giai cấp nào là những người lao động trực tiếp hoặc gián tiếp vận hành các công cụ sản xuất có tính chất công nghiệp ngày càng hiện đại và xã hội hóa cao?", a:"Tư sản", b:"Công nhân", c:"Nông dân", d:"Địa chủ", ans:["B"]},
+  {id:37, ch:2, q:"Ai đã khẳng định vấn đề: \"Trong công trường thủ công và trong nghề thủ công, người công nhân sử dụng công cụ của mình, còn trong công xưởng thì người công nhân phải phục vụ máy móc\"?", a:"Chủ tịch Hồ Chí Minh", b:"V.I.Lênin", c:"C.Mác và Ph.Ăngghen", d:"Tập Cận Bình", ans:["C"]},
+  {id:38, ch:2, q:"Về phương diện chính trị - xã hội, giai cấp công nhân trong chủ nghĩa tư bản có vị trí như thế nào?", a:"Là những người nắm giữ tư liệu sản xuất của xã hội tư bản chủ nghĩa, tự tổ chức sản xuất kinh doanh lớn mà không hợp tác với giai cấp nào", b:"Là những người không có sở hữu tư liệu sản xuất chủ yếu của xã hội, phải bán sức lao động cho nhà tư bản và bị bóc lột giá trị thặng dư", c:"Là những người sở hữu tư liệu sản xuất, hợp tác với nhà tư bản để kiếm sống", d:"Là những người có sở hữu một số tư liệu sản xuất nhỏ, có thể tự sản xuất, nhưng nhỏ lẻ, dễ phá sản nên phải bán sức lao động cho nhà tư bản là chính", ans:["B"]},
+  {id:39, ch:2, q:"Dựa trên phương diện chính trị - xã hội, giai cấp công nhân được hiểu như thế nào?", a:"Là những người nông dân nghèo bị bóc lột sức lao động", b:"Là những người tri thức tham gia vào sản xuất", c:"Là sản phẩm xã hội của quá trình phát triển tư bản chủ nghĩa", d:"A và B đều đúng", ans:["C"]},
+  {id:40, ch:2, q:"Điều gì khiến cho giai cấp công nhân trở thành giai cấp đối kháng với giai cấp tư sản?", a:"Không sở hữu tư liệu sản xuất chủ yếu của xã hội", b:"Lao động trong nền công nghiệp có kỹ thuật hiện đại", c:"Là giai cấp chiếm số đông trong dân cư", d:"Có tinh thần cách mạng, chống giai cấp tư sản", ans:["A"]},
+  {id:41, ch:2, q:"Cuộc đấu tranh của giai cấp vô sản chống lại nội dung gì của giai cấp tư sản?", a:"Chống lại sự thống trị, áp bức", b:"Chống lại chế độ độc tài", c:"Chống lại sự bóc lột, độc quyền", d:"Chống lại sự thống trị, độc tôn", ans:["A"]},
+  {id:42, ch:2, q:"Theo C.Mác và Ph.Ăngghen: “giai cấp tư sản không chỉ tạo ra vũ khí sẽ giết chết mình mà còn tạo ra những người sử dụng vũ khí đó …” - những người đó là ai?", a:"Giai cấp công nhân hiện đại", b:"Giai cấp nông dân hiện đại", c:"Những nhà tư sản trí thức", d:"Tầng lớp trí thức", ans:["A"]},
+  {id:43, ch:2, q:"Sự thống trị của giai cấp tư sản, đặc biệt là bộ phận tư sản công nghiệp là điều kiện ban đầu cho sự phát triển của giai cấp nào?", a:"Sự phát triển giai cấp tư sản", b:"Sự phát triển giai cấp chủ nô", c:"Sự phát triển giai cấp nông dân", d:"Sự phát triển giai cấp công nhân", ans:["D"]},
+  {id:44, ch:2, q:"Trong xã hội tư bản chủ nghĩa (hoặc trong lịch sử), giai cấp nào là giai cấp duy nhất không có lợi ích gắn với chế độ tư hữu về tư liệu sản xuất (không có lợi ích riêng với nghĩa là tư hữu)?", a:"Giai cấp tư sản / Tầng lớp tiểu tư sản", b:"Giai cấp công nhân", c:"Giai cấp nô lệ / Tầng lớp trí thức", d:"Giai cấp nông dân", ans:["B"]},
+  {id:45, ch:2, q:"Nền sản xuất đại công nghiệp và phương thức sản xuất tiên tiến đã rèn luyện cho giai cấp công nhân có những phẩm chất gì đặc biệt hơn các giai cấp khác?", a:"Tính tổ chức, kỷ luật lao động, tinh thần hợp tác cao", b:"Tinh thần yêu thương, đùm bọc lẫn nhau", c:"Sự khổ luyện, kiên trì lao động vì tiền lương", d:"Phẩm chất cần cù, siêng năng và chịu khó", ans:["A"]},
+  {id:46, ch:2, q:"Tại sao nói giai cấp công nhân là giai cấp có tinh thần cách mạng triệt để nhất?", a:"Vì giai cấp công nhân có lợi ích cơ bản thống nhất với đại đa số nhân dân lao động, có sứ mệnh lịch sử xóa bỏ mọi chế độ bóc lột, bất công", b:"Vì giai cấp công nhân là giai cấp đông đảo nhất trong xã hội", c:"Vì giai cấp công nhân là giai cấp duy nhất bị bóc lột và có mâu thuẫn đối kháng trực tiếp với giai cấp thống trị", d:"Vì giai cấp công nhân có trình độ học vấn cao nhất", ans:["A"]},
+  {id:47, ch:2, q:"Giai cấp nào có sứ mệnh thủ tiêu chủ nghĩa tư bản, xây dựng thành công chủ nghĩa xã hội và chủ nghĩa cộng sản?", a:"Nông dân", b:"Tư sản", c:"Chủ nô", d:"Công nhân", ans:["D"]},
+  {id:48, ch:2, q:"Sứ mệnh lịch sử thế giới của giai cấp công nhân là gì?", a:"Xóa bỏ sự thống trị áp bức của chủ nghĩa tư bản, xây dựng thành công chế độ xã hội mới - xã hội chủ nghĩa và cộng sản chủ nghĩa, tiến tới một xã hội không còn giai cấp", b:"Xóa bỏ sự thống trị áp bức của chế độ phong kiến, xây dựng thành công chế độ xã hội mới - xã hội chủ nghĩa và cộng sản chủ nghĩa, tiến tới một xã hội không còn giai cấp", c:"Xóa bỏ sự thống trị áp bức của chế độ công xã nguyên thủy, xây dựng thành công chế độ xã hội mới - xã hội chủ nghĩa và cộng sản chủ nghĩa, tiến tới một xã hội không còn giai cấp", d:"Xóa bỏ sự thống trị áp bức của chủ nghĩa tư bản, xây dựng thành công chế độ xã hội mới - phong kiến", ans:["A"]},
+  {id:49, ch:2, q:"Nội dung quan trọng nhất trong sứ mệnh lịch sử của giai cấp công nhân là gì?", a:"Giành chính quyền", b:"Giành chính quyền, xóa bỏ áp bức bóc lột, giải phóng con người", c:"Công nhân phải liên minh với nông dân hoàn thành cách mạng xã hội", d:"Vô sản các nước đoàn kết lại", ans:["B"]},
+  {id:50, ch:2, multi:true, q:"(Multiple Choice) Thực hiện sứ mệnh lịch sử của giai cấp công nhân là sự nghiệp cách mạng của bản thân giai cấp công nhân cùng với đông đảo quần chúng và mang lại lợi ích cho đa số, được biểu hiện qua các giai đoạn nào?", a:"Giai đoạn giành chính quyền", b:"Giai đoạn xây dựng chế độ xã hội mới", c:"Giai đoạn đấu tranh đòi các quyền tự do, dân chủ", d:"Giai đoạn xóa bỏ giai cấp sau khi xây dựng thành công chủ nghĩa xã hội", ans:["A","B"]},
+  {id:51, ch:2, q:"Về nội dung kinh tế, sứ mệnh lịch sử của giai cấp công nhân được thể hiện như thế nào?", a:"Giai cấp công nhân thiết lập một quan hệ sản xuất mới phù hợp với sự phát triển của lực lượng sản xuất", b:"Giai cấp công nhân chống bất công và bất bình đẳng trong xã hội", c:"Giai cấp công nhân thực hiện công nghiệp hóa, hiện đại hóa đất nước", d:"Giai cấp công nhân bảo vệ nền tảng tư tưởng của Đảng Cộng sản", ans:["A"]},
+  {id:52, ch:2, q:"Vai trò của giai cấp công nhân trong quá trình sản xuất là gì?", a:"Là chủ thể của quá trình sản xuất vật chất để sản xuất ra của cải vật chất ngày càng nhiều đáp ứng nhu cầu ngày càng tăng của con người và xã hội", b:"Là chủ thể của quá trình phát triển, xây dựng nông thôn mới gắn với xây dựng các cơ sở công nghiệp, dịch vụ và phát triển đô thị", c:"Là chủ thể của quá trình tổ chức sản xuất, kinh doanh hàng hóa nhằm thúc đẩy trao đổi và mở rộng thị trường, tối đa hoá lợi nhuận cho doanh nghiệp", d:"Là chủ thể của quá trình nghiên cứu khoa học và phát triển công nghệ nhằm tạo ra tri thức mới cho xã hội", ans:["A"]},
+  {id:53, ch:2, q:"Về nội dung chính trị - xã hội, sứ mệnh lịch sử của giai cấp công nhân được thể hiện như thế nào?", a:"Giai cấp công nhân cùng với nhân dân lao động dưới sự lãnh đạo của Đảng Cộng sản phải tiến hành cách mạng chính trị lật đổ quyền thống trị của giai cấp tư sản, giành quyền lực về tay giai cấp công nhân và nhân dân lao động", b:"Giai cấp công nhân phải lãnh đạo được các giai cấp khác và lãnh đạo được Đảng Cộng sản để tiến hành cách mạng tư sản", c:"Giai cấp công nhân phải cùng với nhân dân lao động lãnh đạo Đảng Cộng sản tiến hành cách mạng chính trị lật đổ chính quyền của giai cấp phong kiến", d:"Giai cấp công nhân phải xác lập được quyền thống trị nhân dân lao động và các giai cấp khác bằng cách thực hiện cách mạng lật đổ chính quyền của giai cấp tư sản", ans:["A"]},
+  {id:54, ch:2, q:"Sau khi lật đổ được giai cấp thống trị, sứ mệnh lịch sử của giai cấp công nhân KHÔNG thực hiện điều gì sau đây?", a:"Thiết lập nhà nước kiểu mới, mang bản chất giai cấp công nhân", b:"Xây dựng nền dân chủ xã hội chủ nghĩa", c:"Thực hiện quyền lực, quyền làm chủ của tuyệt đại đa số nhân dân lao động", d:"Tiếp tục chiến đấu giải phóng giai cấp công nhân", ans:["D"]},
+  {id:55, ch:2, q:"Trong quá trình cải tạo xã hội cũ và xây dựng xã hội mới trên lĩnh vực văn hóa, tư tưởng, giai cấp công nhân cần tập trung xây dựng hệ giá trị mới như thế nào?", a:"Lao động; công bằng; dân chủ; bình đẳng và tự do", b:"Độc lập; tự chủ; ấm no; tự do và hạnh phúc", c:"Hội nhập; phát triển; tiến bộ; văn minh và hợp tác", d:"Dân giàu; nước mạnh; công bằng; dân chủ và văn minh", ans:["A"]},
+  {id:56, ch:2, q:"Theo C. Mác và Ph. Ăngghen, khi thực hiện cách mạng xã hội chủ nghĩa xóa bỏ được tình trạng người bóc lột người, giai cấp này bóc lột giai cấp khác thì có thể tiến tới xóa bỏ điều gì?", a:"Xóa bỏ tình trạng dân tộc này bóc lột dân tộc khác", b:"Xóa bỏ sự tồn tại của chế độ sở hữu tư nhân về công cụ lao động", c:"Xóa bỏ được tệ nạn xã hội", d:"Xóa bỏ được tôn giáo", ans:["A"]},
+  {id:57, ch:2, q:"Điều kiện khách quan quy định sứ mệnh lịch sử của giai cấp công nhân là gì?", a:"Do giai cấp công nhân phát triển cả về số lượng và chất lượng", b:"Do địa vị kinh tế - xã hội và địa vị chính trị - xã hội quy định", c:"Giai cấp công nhân có đồng minh tự nhiên là giai cấp nông dân", d:"Do có Đảng Cộng sản lãnh đạo", ans:["B"]},
+  {id:58, ch:2, multi:true, q:"(Multiple Choice) Điều kiện chủ quan để giai cấp công nhân thực hiện sứ mệnh lịch sử của mình là gì? Lựa chọn các đáp án đúng.", a:"Sự phát triển của bản thân giai cấp công nhân về cả số lượng và chất lượng", b:"Phải có Đảng Cộng sản lãnh đạo", c:"Phải có sự liên minh giữa giai cấp công nhân với giai cấp nông dân và các tầng lớp lao động khác", d:"Giai cấp công nhân đại diện cho phương thức sản xuất tiên tiến và lực lượng sản xuất hiện đại", ans:["A","B","C"]},
+  {id:59, ch:2, q:"Nhân tố chủ quan nào quan trọng nhất để giai cấp công nhân thực hiện thắng lợi sứ mệnh lịch sử của mình?", a:"Sự ra đời của Đảng Cộng sản", b:"Sự phát triển của giai cấp công nhân về số lượng và chất lượng", c:"Địa vị kinh tế của giai cấp công nhân", d:"Địa vị chính trị xã hội của giai cấp công nhân", ans:["A"]},
+  {id:60, ch:2, q:"Theo quan điểm của Chủ nghĩa Mác – Lênin, quy luật chung, phổ biến cho sự ra đời của Đảng Cộng sản (chính Đảng của giai cấp công nhân) là sự kết hợp giữa những yếu tố nào?", a:"Chủ nghĩa Mác với phong trào công nhân và phong trào yêu nước", b:"Chủ nghĩa Mác – Lênin (hoặc Chủ nghĩa xã hội khoa học) với phong trào công nhân", c:"Phong trào công nhân với phong trào nông dân", d:"Chủ nghĩa Mác – Lênin với phong trào công nhân và phong trào yêu nước", ans:["B"]},
+  {id:61, ch:2, q:"Theo chủ nghĩa Mác - Lênin, để thực hiện được sứ mệnh lịch sử của mình, giai cấp công nhân phải thiết lập được sự liên minh với giai cấp, tầng lớp nào?", a:"Liên minh với giai cấp nông dân và tầng lớp tiểu tư sản", b:"Liên minh với giai cấp nông dân và các tầng lớp lao động khác", c:"Liên minh với một bộ phận giai cấp tư sản tiến bộ", d:"Liên minh với giai cấp nông dân", ans:["B"]},
+  {id:62, ch:2, q:"Cơ sở để xác định thời đại và phân chia thời đại là gì?", a:"Hình thái kinh tế - xã hội và vị trí của một giai cấp đứng ở vị trí trung tâm", b:"Vị trí của một giai cấp đứng ở vị trí trung tâm", c:"Sự phát triển của lực lượng sản xuất và một quan hệ sản xuất phù hợp", d:"Cách mạng xã hội chủ nghĩa do giai cấp công nhân lãnh đạo thành công", ans:["A"]},
+  {id:63, ch:2, q:"Đâu không phải là một trong những điểm tương đối ổn định của giai cấp công nhân ngày nay so với giai cấp công nhân thế kỷ XIX?", a:"Giai cấp công nhân vẫn là lực lượng sản xuất hàng đầu của xã hội hiện đại", b:"Giai cấp công nhân vẫn bị chủ nghĩa tư bản và giai cấp tư sản bóc lột giá trị thặng dư", c:"Giai cấp công nhân vẫn có lợi ích cơ bản xung đột với lợi ích cơ bản của giai cấp tư sản", d:"Giai cấp công nhân vẫn làm việc với cường độ cao, trình độ lao động ngày càng yếu kém (hoặc: Xu hướng 'trung lưu hóa' gia tăng)", ans:["D"]},
+  {id:64, ch:2, multi:true, q:"(Multiple Choice) Những biến đổi và khác biệt của giai cấp công nhân hiện đại so với giai cấp công nhân thế kỉ XIX là gì?", a:"Xu hướng trí tuệ hóa tăng nhanh", b:"Xu hướng trung lưu hóa gia tăng", c:"Là giai cấp giữ vai trò lãnh đạo, cầm quyền trong quá trình xây dựng chủ nghĩa xã hội ở một số quốc gia", d:"Xu hướng bần cùng hóa gia tăng nhanh chóng", ans:["A","B","C"]},
+  {id:65, ch:2, q:"Trong thời đại hiện nay, ở các nước tư bản chủ nghĩa, mục tiêu đấu tranh trực tiếp để thực hiện sứ mệnh lịch sử của giai cấp công nhân về chính trị - xã hội là gì?", a:"Chống bất công, bất bình đẳng xã hội", b:"Xóa bỏ chế độ tư hữu về tư liệu sản xuất", c:"Giành chính quyền về tay giai cấp công nhân", d:"Xác lập quyền lãnh đạo xã hội của Đảng Cộng sản", ans:["A"]},
+  {id:66, ch:2, q:"Trong thời đại hiện nay, ở các nước tư bản chủ nghĩa, mục tiêu đấu tranh lâu dài để thực hiện sứ mệnh lịch sử của giai cấp công nhân về chính trị - xã hội là gì?", a:"Chống bất công, bất bình đẳng xã hội", b:"Thỏa hiệp với giai cấp tư sản để tiến tới chủ nghĩa xã hội bằng con đường hòa bình", c:"Giành chính quyền về tay giai cấp công nhân và nhân dân lao động", d:"Đấu tranh đòi các quyền tự do, dân chủ", ans:["C"]},
+  {id:67, ch:2, q:"Trong thời đại hiện nay, ở các nước xã hội chủ nghĩa, nơi các Đảng Cộng sản đã trở thành đảng cầm quyền, sứ mệnh lịch sử của giai cấp công nhân về chính trị - xã hội là gì?", a:"Đấu tranh giành chính quyền về tay giai cấp công nhân và nhân dân lao động", b:"Đấu tranh đòi các quyền tự do, dân chủ", c:"Lãnh đạo công cuộc đổi mới, giải quyết thành công các nhiệm vụ trong thời kỳ quá độ lên chủ nghĩa xã hội", d:"Chống bất công, bất bình đẳng xã hội", ans:["C"]},
+  {id:68, ch:2, q:"Tại sao trong thời gian đầu, giai cấp công nhân Việt Nam chậm phát triển?", a:"Vì sinh ra và lớn lên ở một nước thuộc địa, nửa phong kiến, dưới ách thống trị của thực dân Pháp", b:"Vì giai cấp công nhân Việt Nam không có tinh thần đấu tranh", c:"Vì đất nước có chiến tranh liên miên", d:"Vì trình độ văn hóa thấp", ans:["A"]},
+  {id:69, ch:2, q:"Phong trào công nhân ở Việt Nam vào thế kỉ XX cho thấy đặc trưng của giai cấp công nhân Việt Nam khác với giai cấp công nhân các nước tư bản như thế nào?", a:"Giai cấp công nhân Việt Nam thể hiện đặc tính cách mạng về ý thức giai cấp và cả về ý thức dân tộc", b:"Giai cấp công nhân Việt Nam chưa hăng hái trong các phong trào đấu tranh như công nhân các nước tư bản chủ nghĩa", c:"Giai cấp công nhân Việt Nam khi ra đời chưa có sự lãnh đạo kịp thời của Đảng Cộng sản như các nước tư bản chủ nghĩa", d:"Giai cấp công nhân Việt Nam không có tinh thần cách mạng triệt để", ans:["A"]},
+  {id:70, ch:2, q:"Nội dung sứ mệnh lịch sử của giai cấp công nhân Việt Nam hiện nay thực hiện trên những phương diện nào?", a:"Giai cấp công nhân thực hiện xây dựng con người mới xã hội chủ nghĩa", b:"Giai cấp công nhân thực hiện xây dựng đạo đức và lối sống mới xã hội chủ nghĩa", c:"Giai cấp công nhân thực hiện xây dựng và củng cố ý thức hệ tiên tiến của mình", d:"Kinh tế; Chính trị - xã hội; Văn hoá, tư tưởng", ans:["D"]},
+  {id:71, ch:2, q:"Vấn đề nổi bật nhất đối với việc thực hiện sứ mệnh lịch sử của giai cấp công nhân Việt Nam hiện nay là gì?", a:"Phát huy vai trò và trách nhiệm của lực lượng đi đầu trong sự nghiệp đẩy mạnh công nghiệp hóa, hiện đại hóa đất nước", b:"Phát huy vai trò của lực lượng đi đầu trong sự nghiệp đẩy mạnh công nghiệp hóa, hiện đại hóa đất nước", c:"Phát huy trách nhiệm của lực lượng đi đầu trong sự nghiệp đẩy mạnh công nghiệp hóa, hiện đại hóa đất nước", d:"Phát huy sức chiến đấu của bản thân trong sự nghiệp đẩy mạnh công nghiệp hóa, hiện đại hóa đất nước", ans:["A"]},
+  {id:72, ch:2, q:"Thực hiện công nghiệp hóa, gắn liền công nghiệp hóa với hiện đại hóa, đẩy mạnh công nghiệp hóa gắn với phát triển kinh tế tri thức, bảo vệ tài nguyên, môi trường là nhiệm vụ của giai cấp công nhân trên lĩnh vực nào?", a:"Chính trị - xã hội", b:"Kinh tế", c:"Văn hóa", d:"Tư tưởng", ans:["B"]},
+  {id:73, ch:2, q:"Ở Việt Nam hiện nay, tổ chức nào đại diện cho quyền lợi, lợi ích hợp pháp và là nơi để giai cấp công nhân chủ động, tích cực tham gia xây dựng, chỉnh đốn Đảng, bảo vệ chế độ xã hội chủ nghĩa, bảo vệ nhân dân?", a:"Hệ thống tổ chức Công đoàn", b:"Quốc hội", c:"Mặt trận Tổ quốc Việt Nam", d:"Hội đồng nhân dân các cấp", ans:["A"]},
+
+  // ================= CHƯƠNG 3 (Câu 74 - 121) =================
+  {id:74, ch:3, q:"Học thuyết về hình thái kinh tế - xã hội do ai khởi xướng, và sau đó được ai bổ sung, phát triển?", a:"C.Mác - V.I.Lênin khởi xướng, Ph.Ăngghen bổ sung phát triển", b:"C.Mác - Ph.Ăngghen khởi xướng, V.I.Lênin bổ sung phát triển", c:"C.Mác - Ph.Ăngghen khởi xướng, Chủ tịch Hồ Chí Minh bổ sung phát triển", d:"C.Mác khởi xướng, Ph.Ăngghen bổ sung phát triển", ans:["B"]},
+  {id:75, ch:3, q:"Cấu trúc cơ bản của một hình thái kinh tế - xã hội là gì?", a:"Lực lượng sản xuất, quan hệ sản xuất và kiến trúc thượng tầng", b:"Cơ sở kinh tế và thể chế nhà nước", c:"Cơ sở hạ tầng và lực lượng sản xuất", d:"Lực lượng sản xuất và quan hệ sản xuất", ans:["A"]},
+  {id:76, ch:3, q:"Chủ nghĩa Mác - Lênin đã chia lịch sử vận động và phát triển của xã hội thành mấy hình thái kinh tế - xã hội?", a:"2", b:"3", c:"4", d:"5", ans:["D"]},
+  {id:77, ch:3, q:"Theo quan điểm của chủ nghĩa Mác - Lênin, sự thay thế hình thái kinh tế - xã hội tư bản chủ nghĩa bằng hình thái kinh tế - xã hội cộng sản chủ nghĩa được hiểu là gì?", a:"Một sự cải biến mang tính chất chủ quan", b:"Một bước ngoặt phát triển mới, đưa nhân loại thoát khỏi lối mòn cũ", c:"Một quá trình lịch sử - tự nhiên", d:"Một quá trình can thiệp của con người bằng ý chí nhằm cải biến lịch sử theo hướng nhân văn, tích cực hơn", ans:["C"]},
+  {id:78, ch:3, q:"Theo C.Mác và Ph.Ăngghen, hình thái kinh tế - xã hội cộng sản chủ nghĩa phát triển như thế nào?", a:"Phát triển theo hình xoáy ốc", b:"Phát triển theo ý muốn chủ quan của con người", c:"Phát triển theo sở thích của một đấng siêu nhiên nào đó trong vũ trụ", d:"Phát triển từ thấp lên cao", ans:["D"]},
+  {id:79, ch:3, q:"Theo quan điểm của chủ nghĩa Mác - Lênin, hình thái kinh tế - xã hội nào được thai nghén trong lòng xã hội tư bản chủ nghĩa?", a:"Hình thái kinh tế - xã hội chiếm hữu nô lệ", b:"Hình thái kinh tế - xã hội phong kiến", c:"Hình thái kinh tế - xã hội cộng sản nguyên thủy", d:"Hình thái kinh tế - xã hội cộng sản chủ nghĩa", ans:["D"]},
+  {id:80, ch:3, q:"Theo chủ nghĩa Mác - Lênin, chủ nghĩa xã hội được hiểu là gì?", a:"Giai đoạn đầu của hình thái kinh tế - xã hội cộng sản chủ nghĩa", b:"Một hình thái kinh tế - xã hội", c:"Là một chế độ xã hội, trong đó sự thống trị của giai cấp công nhân được xác lập", d:"Là giai đoạn phát triển cao của hình thái kinh tế - xã hội cộng sản chủ nghĩa", ans:["A"]},
+  {id:81, ch:3, q:"Theo chủ nghĩa Mác - Lênin, hình thái kinh tế - xã hội cộng sản chủ nghĩa có khác biệt đặc trưng nào với các hình thái kinh tế - xã hội chiếm hữu nô lệ, phong kiến và tư bản chủ nghĩa?", a:"Hình thái kinh tế - xã hội cộng sản chủ nghĩa là giai đoạn phát triển cao nhất và cuối cùng của lịch sử loài người", b:"Hình thái kinh tế - xã hội cộng sản chủ nghĩa khác biệt về chất, đó là xã hội không có giai cấp đối kháng như các xã hội trước đó", c:"Hình thái kinh tế - xã hội cộng sản chủ nghĩa là phiên bản điều chỉnh tốt hơn từ tư bản chủ nghĩa", d:"Hình thái kinh tế - xã hội cộng sản chủ nghĩa là quay trở lại cộng sản nguyên thủy", ans:["B"]},
+  {id:82, ch:3, q:"Khác biệt về sự ra đời của hình thái kinh tế - xã hội cộng sản chủ nghĩa với sự ra đời của các hình thái kinh tế - xã hội trước đây là gì?", a:"Phải được thực hiện thông qua cuộc cách mạng vô sản", b:"Phải được thực hiện thông qua cuộc cách mạng tư sản", c:"Phải được thực hiện thông qua một sự cải biến sâu sắc về trình độ phát triển của công nghiệp và người lao động", d:"Phải có sự hội tụ đầy đủ các yếu tố về kinh tế và chính trị", ans:["A"]},
+  {id:83, ch:3, q:"Mâu thuẫn cơ bản và chủ yếu trong xã hội tư bản chủ nghĩa (biểu hiện về mặt kinh tế), bắt buộc nó phải được thay thế bằng hình thái kinh tế - xã hội khác phù hợp hơn là gì?", a:"Mâu thuẫn giữa tính chất xã hội hóa của lực lượng sản xuất với chế độ chiếm hữu tư nhân tư bản chủ nghĩa về tư liệu sản xuất", b:"Mâu thuẫn giữa tính chất tư nhân hóa của lực lượng sản xuất với chế độ chiếm hữu tư nhân về tư liệu sản xuất", c:"Mâu thuẫn giữa tính chất chuyên môn hóa của lực lượng sản xuất với chế độ chiếm hữu tập thể tư bản chủ nghĩa về tư liệu sản xuất", d:"Mâu thuẫn giữa tính chất xã hội hóa về lực lượng sản xuất với chế độ chiếm hữu công cộng về tư liệu sản xuất", ans:["A"]},
+  {id:84, ch:3, q:"Mâu thuẫn cơ bản của hình thái kinh tế - xã hội tư bản chủ nghĩa biểu hiện về mặt xã hội là gì?", a:"Mâu thuẫn giữa giai cấp công nhân hiện đại với giai cấp tư sản lỗi thời", b:"Mâu thuẫn giữa giai cấp nông dân với giai cấp địa chủ", c:"Mâu thuẫn giữa nhân dân lao động với tầng lớp quý tộc", d:"Mâu thuẫn giữa các tập đoàn tư bản độc quyền", ans:["A"]},
+  {id:85, ch:3, q:"Tính chất xã hội hóa cao của lực lượng sản xuất đòi hỏi vấn đề gì?", a:"Một quan hệ sản xuất mới, phù hợp với chế độ công hữu các tư liệu sản xuất chủ yếu của xã hội", b:"Một cơ sở hạ tầng mới, phù hợp với chế độ công hữu các tư liệu sản xuất chủ yếu của xã hội", c:"Một lực lượng sản xuất mới, phù hợp với chế độ công hữu các tư liệu sản xuất chủ yếu của xã hội", d:"Một kiến trúc thượng tầng mới, phù hợp với lực lượng sản xuất mới", ans:["A"]},
+  {id:86, ch:3, q:"Hai tiền đề vật chất quan trọng nhất dẫn đến sự thay thế hình thái kinh tế - xã hội tư bản chủ nghĩa bằng hình thái kinh tế - xã hội cộng sản chủ nghĩa là gì?", a:"Sự phát triển của lực lượng sản xuất và sự trưởng thành của giai cấp công nhân", b:"Sự phát triển của khoa học công nghệ và sự trưởng thành của đội ngũ trí thức", c:"Sự phát triển của nền kinh tế tri thức và sự trưởng thành của tất cả các giai cấp trong xã hội", d:"Sự phát triển của quan hệ sản xuất và sự trưởng thành của đội ngũ doanh nhân", ans:["A"]},
+  {id:87, ch:3, q:"Điền vào chỗ trống: C.Mác và Ph.Ăngghen chỉ rõ: “Từ chỗ là những hình thức phát triển của các lực lượng sản xuất, những quan hệ sản xuất ấy trở thành những xiềng xích của các lực lượng sản xuất. Khi đó bắt đầu thời đại...”", a:"Một cuộc tổng tiến công", b:"Một cuộc cải cách", c:"Tất cả đều đúng", d:"Một cuộc cách mạng", ans:["D"]},
+  {id:88, ch:3, q:"Về mặt lý thuyết, con đường cách mạng vô sản nào có thể tiến hành, nhưng vô cùng hiếm, quý và chưa từng xảy ra trên thực tế?", a:"Con đường bạo lực cách mạng", b:"Con đường hòa bình", c:"Con đường khởi nghĩa vũ trang", d:"Con đường bạo động lật đổ", ans:["B"]},
+  {id:89, ch:3, q:"Chủ nghĩa xã hội có mấy đặc trưng bản chất?", a:"4", b:"5", c:"6", d:"7", ans:["C"]},
+  {id:90, ch:3, q:"Đặc trưng cơ bản đầu tiên của chủ nghĩa xã hội là gì?", a:"Chủ nghĩa xã hội có nhà nước kiểu mới mang bản chất giai cấp công nhân, đại biểu cho lợi ích, quyền lực và ý chí của nhân dân lao động", b:"Chủ nghĩa xã hội giải phóng giai cấp, giải phóng dân tộc, giải phóng xã hội, giải phóng con người, tạo điều kiện để con người phát triển toàn diện", c:"Chủ nghĩa xã hội là xã hội do nhân dân lao động làm chủ", d:"Chủ nghĩa xã hội có nền kinh tế phát triển cao dựa trên lực lượng sản xuất hiện đại và chế độ công hữu về tư liệu sản xuất chủ yếu", ans:["B"]},
+  {id:91, ch:3, multi:true, q:"(Multiple Choice) Chủ nghĩa xã hội giải phóng cái gì nhằm tạo điều kiện để con người phát triển? (Chọn 3 đáp án)", a:"Giải phóng giai cấp", b:"Giải phóng dân tộc", c:"Giải phóng sức lao động", d:"Giải phóng con người", ans:["A","B","D"]},
+  {id:92, ch:3, q:"Đặc trưng bản chất nào của chủ nghĩa xã hội thể hiện đây là chế độ xã hội vì con người, do con người?", a:"Chủ nghĩa xã hội có nền kinh tế phát triển cao, dựa trên chế độ tư hữu về tư liệu sản xuất chủ yếu", b:"Chủ nghĩa xã hội là chế độ xã hội do nhân dân lao động làm chủ", c:"Chủ nghĩa xã hội giải phóng giai cấp công nhân, nhân dân lao động và đồng thời đàn áp giai cấp thống trị tàn bạo là giai cấp tư sản", d:"Chủ nghĩa xã hội có nhà nước kiểu mới mang bản chất giai cấp công nhân, đại biểu cho lợi ích, quyền lực và ý chí của riêng giai cấp công nhân", ans:["B"]},
+  {id:93, ch:3, multi:true, q:"(Multiple Choice) Đặc trưng bản chất của chủ nghĩa xã hội về phương diện kinh tế là gì? Chọn các đáp án đúng.", a:"Nền kinh tế phát triển cao dựa trên lực lượng sản xuất hiện đại", b:"Chế độ công hữu về tư liệu sản xuất chủ yếu", c:"Nền kinh tế phát triển cao dựa trên lực lượng sản xuất công nghiệp cơ khí", d:"Chế độ sở hữu tập thể, hỗn hợp của tư nhân và công cộng", ans:["A","B"]},
+  {id:94, ch:3, q:"Cơ sở vật chất - kỹ thuật của chủ nghĩa xã hội là gì?", a:"Nền kinh tế kế hoạch hóa tập trung", b:"Nền đại công nghiệp", c:"Nền kinh tế thị trường", d:"Nền công nghiệp nặng", ans:["B"]},
+  {id:95, ch:3, q:"Thiết lập một chế độ xã hội cao hơn chủ nghĩa tư bản đòi hỏi điều gì?", a:"Lao động theo một trình độ cao hơn", b:"Tổ chức lao động theo một trình độ cao hơn", c:"Làm theo năng lực hưởng theo nhu cầu", d:"Tổ chức phân phối sản phẩm theo một trình độ cao", ans:["B"]},
+  {id:96, ch:3, multi:true, q:"(Multiple Choice) Theo V.I.Lênin, mục đích cao cả nhất mà chủ nghĩa xã hội cần đạt đến là gì?", a:"Xóa bỏ sự phân chia xã hội thành giai cấp", b:"Biến tất cả thành viên trong xã hội thành người lao động", c:"Tiêu diệt cơ sở của mọi tình trạng người bóc lột người", d:"Thiết lập quyền thống trị xã hội của giai cấp công nhân và nhân dân lao động", ans:["A","B","C"]},
+  {id:97, ch:3, q:"Nguyên tắc phân phối chủ yếu của chủ nghĩa xã hội (và trong thời kỳ quá độ lên chủ nghĩa xã hội ở Việt Nam hiện nay) là gì?", a:"Làm theo năng lực, hưởng theo nhu cầu", b:"Làm theo năng lực, hưởng theo lao động (Phân phối theo lao động)", c:"Làm theo năng lực, hưởng theo phúc lợi xã hội", d:"Làm theo công việc, hưởng theo tiền lương / Phân phối theo bao cấp", ans:["B"]},
+  {id:98, ch:3, q:"“Về lý luận, không thể nghi ngờ gì được rằng giữa ... và ... có một thời kỳ quá độ nhất định”. Đâu là nhóm từ còn thiếu trong dấu [...]?", a:"Chủ nghĩa tư bản/ chủ nghĩa cộng sản", b:"Chủ nghĩa tư bản/ Giai cấp công nhân", c:"Nhân dân lao động/ chính quyền", d:"Chính trị/ xã hội", ans:["A"]},
+  {id:99, ch:3, q:"Tại sao trong bất kì xã hội nào, muốn tiến lên chủ nghĩa xã hội đều tất yếu phải trải qua thời kỳ quá độ?", a:"Vì chủ nghĩa xã hội có bản chất đối lập với các chế độ xã hội bóc lột trước đó, giai cấp vô sản cần có thời gian để cải tạo xã hội cũ, xây dựng xã hội mới", b:"Vì chủ nghĩa xã hội là thực hiện ý chí chủ quan của giai cấp công nhân và nhân dân lao động", c:"Vì chủ nghĩa xã hội thực hiện sự thống trị của giai cấp, tầng lớp nghèo nàn trong xã hội", d:"Vì chủ nghĩa xã hội là giai đoạn đầu của hình thái kinh tế - xã hội cộng sản chủ nghĩa", ans:["A"]},
+  {id:100, ch:3, q:"Theo V.I. Lênin, đối với những nước chưa có chủ nghĩa tư bản phát triển cao thì cần phải có một thời kỳ gì để từ chủ nghĩa tư bản lên chủ nghĩa xã hội?", a:"Thời kỳ khai sáng", b:"Thời kỳ tiến lên", c:"Thời kỳ quá độ", d:"Thời kỳ phát triển", ans:["C"]},
+  {id:101, ch:3, q:"Quá độ từ xã hội tiền tư bản chủ nghĩa phát triển lên chủ nghĩa xã hội (hoặc Liên Xô, Đông Âu, Việt Nam và các nước xã hội chủ nghĩa hiện nay đang quá độ lên chủ nghĩa xã hội) là hình thức quá độ nào?", a:"Quá độ gián tiếp", b:"Quá độ trực tiếp", c:"Quá độ bộ phận", d:"Quá độ toàn diện", ans:["A"]},
+  {id:102, ch:3, q:"Điền từ còn thiếu vào chỗ trống: Lênin viết: “Với sự giúp đỡ của giai cấp vô sản các nước tiên tiến, các nước lạc hậu có thể tiến tới chế độ Xô viết, và qua những giai đoạn phát triển nhất định, tiến tới chủ nghĩa cộng sản, không phải trải qua... phát triển tư bản chủ nghĩa”.", a:"Giai đoạn", b:"Thời kỳ", c:"Chế độ", d:"Hình thái", ans:["A"]},
+  {id:103, ch:3, q:"Thực chất của thời kỳ quá độ lên chủ nghĩa xã hội là gì?", a:"Là thời kỳ cải biến cách mạng từ xã hội tiền tư bản và tư bản chủ nghĩa sang xã hội xã hội chủ nghĩa", b:"Là thời kỳ cải biến cách mạng từ xã hội cộng sản nguyên thủy lên xã hội xã hội chủ nghĩa", c:"Là thời kỳ cải biến cách mạng từ xã hội chiếm hữu nô lệ lên xã hội xã hội chủ nghĩa", d:"Là thời kỳ cải biến cách mạng từ xã hội xã hội chủ nghĩa lên xã hội cộng sản chủ nghĩa", ans:["A"]},
+  {id:104, ch:3, multi:true, q:"(Multiple Choice) Những đặc điểm cơ bản của thời kì quá độ lên chủ nghĩa xã hội là gì?", a:"Thời kì cải tạo cách mạng sâu sắc, triệt để xã hội tư bản chủ nghĩa trên mọi lĩnh vực", b:"Thời kì xây dựng từng bước cơ sở vật chất - kỹ thuật và đời sống tinh thần của chủ nghĩa xã hội", c:"Thời kì đấu tranh giai cấp khi tương quan lực lượng cân bằng", d:"Thời kì thực hiện nền chuyên chính vô sản", ans:["A","B","D"]},
+  {id:105, ch:3, q:"Trên lĩnh vực kinh tế, trong thời kỳ quá độ lên chủ nghĩa xã hội tất yếu tồn tại nền kinh tế như thế nào?", a:"Kinh tế nhiều thành phần, trong đó có thành phần đối lập", b:"Kinh tế kế hoạch hóa tập trung cao độ", c:"Kinh tế thị trường tự do", d:"Kinh tế hàng hóa giản đơn", ans:["A"]},
+  {id:106, ch:3, q:"Bản chất của nền kinh tế trong thời kỳ quá độ lên chủ nghĩa xã hội ở nước Nga Xô viết có mấy đặc trưng (thành phần kinh tế)?", a:"3", b:"4", c:"5", d:"6", ans:["C"]},
+  {id:107, ch:3, q:"Thời kỳ quá độ lên chủ nghĩa xã hội là thời kỳ đấu tranh giai cấp trong điều kiện mới, điều kiện đó là gì?", a:"Giai cấp tư sản đã trở thành lực lượng phản động", b:"Giai cấp công nhân đã trở thành giai cấp cầm quyền (nắm được quyền thống trị xã hội)", c:"Giai cấp nông dân nắm quyền lãnh đạo", d:"Không còn đấu tranh giai cấp", ans:["B"]},
+  {id:108, ch:3, q:"Thời kỳ quá độ từ tư bản lên chủ nghĩa xã hội còn tồn tại nhiều tư tưởng khác nhau, chủ yếu trong đó là các tư tưởng nào?", a:"Tư tưởng vô sản và tư tưởng tư sản", b:"Tư tưởng vô sản và tư tưởng địa chủ phong kiến", c:"Tư tưởng chủ nô và tư tưởng tư sản", d:"Tư tưởng vô sản và tư tưởng chủ nô", ans:["A"]},
+  {id:109, ch:3, q:"Khó khăn về xuất phát điểm của Việt Nam khi tiến vào thời kỳ quá độ lên chủ nghĩa xã hội là gì?", a:"Xuất phát từ một xã hội vốn là thuộc địa, nửa phong kiến, lực lượng sản xuất rất thấp, chiến tranh kéo dài, để lại nhiều tàn dư tiêu cực", b:"Xuất phát từ một xã hội phong kiến phát triển, trải qua thời kỳ thuộc địa nên bị đồng hóa nhiều về tư tưởng, văn hóa", c:"Xuất phát từ một xã hội phong kiến lạc hậu, trình độ lực lượng sản xuất nông nghiệp kém, được sự khai hóa của thực dân Pháp nhưng không có sự cải biến tốt hơn", d:"Xuất phát từ một nước công nghiệp phát triển tiến lên chủ nghĩa xã hội", ans:["A"]},
+  {id:110, ch:3, q:"Điều gì vừa là thách thức vừa tạo ra thời cơ cho Việt Nam trong thời kỳ quá độ lên chủ nghĩa xã hội hiện nay?", a:"Cuộc cách mạng khoa học công nghệ và xu thế toàn cầu hóa", b:"Sự trỗi dậy của chủ nghĩa xã hội, tiêu biểu là Trung Quốc", c:"Sự thay đổi trật tự thế giới", d:"Sự gia tăng nhanh chóng của lực lượng lao động nước ta", ans:["A"]},
+  {id:111, ch:3, q:"Đặc điểm lớn nhất của thời kỳ quá độ lên chủ nghĩa xã hội ở Việt Nam là gì? (Bỏ qua chế độ gì?)", a:"Nhiều thành phần xã hội đan xen tồn tại", b:"Từ một nền sản xuất nhỏ, lạc hậu quá độ lên chủ nghĩa xã hội không qua (bỏ qua) chế độ tư bản chủ nghĩa", c:"Lực lượng sản xuất chưa phát triển", d:"Năng suất lao động thấp", ans:["B"]},
+  {id:112, ch:3, q:"Tại Đại hội X, theo quan điểm của Đảng Cộng sản Việt Nam, quá độ lên chủ nghĩa xã hội bỏ qua chế độ tư bản chủ nghĩa ở nước ta có vai trò như thế nào?", a:"Con đường cách mạng chủ quan, con đường xây dựng đất nước trong thời kỳ quá độ lên chủ nghĩa xã hội ở nước ta", b:"Con đường cách mạng tất yếu khách quan, con đường xây dựng đất nước trong thời kỳ quá độ lên phong kiến ở nước ta", c:"Con đường cách mạng tất yếu khách quan, con đường xây dựng đất nước trong thời kỳ quá độ lên chủ nghĩa xã hội ở nước ta", d:"Con đường mong muốn riêng của đất nước ta", ans:["C"]},
+  {id:113, ch:3, multi:true, q:"(Multiple Choice) Quá độ lên chủ nghĩa xã hội bỏ qua chế độ tư bản chủ nghĩa có nghĩa là gì? (lựa chọn ba đáp án)", a:"Bỏ qua việc xác lập địa vị thống trị của quan hệ sản xuất và kiến trúc thượng tầng tư bản chủ nghĩa", b:"Tiếp thu, kế thừa những thành tựu mà nhân loại đạt được dưới chủ nghĩa tư bản", c:"Tạo ra sự biến đổi về chất của xã hội trên tất cả mọi lĩnh vực", d:"Là bỏ qua toàn bộ phương thức sản xuất của chủ nghĩa tư bản", ans:["A","B","C"]},
+  {id:114, ch:3, q:"Trong thời kỳ quá độ lên chủ nghĩa xã hội ở Việt Nam, hình thức sở hữu và thành phần kinh tế nào tuy còn tồn tại nhưng không giữ vai trò chủ đạo?", a:"Sở hữu nhà nước và kinh tế nhà nước", b:"Sở hữu tập thể và kinh tế tập thể", c:"Sở hữu tư nhân và thành phần kinh tế tư nhân, kinh tế tư bản tư nhân", d:"Sở hữu toàn dân", ans:["C"]},
+  {id:115, ch:3, q:"Cương lĩnh xây dựng đất nước trong thời kỳ quá độ lên chủ nghĩa xã hội (bổ sung, phát triển năm 2011) đã phát triển mô hình chủ nghĩa xã hội Việt Nam với mấy đặc trưng và mấy phương hướng?", a:"5 đặc trưng, 5 phương hướng", b:"6 đặc trưng, 6 phương hướng", c:"7 đặc trưng, 7 phương hướng", d:"8 đặc trưng, 8 phương hướng", ans:["D"]},
+  {id:116, ch:3, q:"Vấn đề: “Dân giàu, nước mạnh, dân chủ, công bằng, văn minh” là đặc trưng thứ mấy trong 08 đặc trưng cơ bản của chủ nghĩa xã hội ở Việt Nam (theo Cương lĩnh bổ sung, phát triển năm 2011)?", a:"1", b:"3", c:"6", d:"8", ans:["A"]},
+  {id:117, ch:3, q:"Cương lĩnh xây dựng đất nước trong thời kỳ quá độ lên chủ nghĩa xã hội (Bổ sung và phát triển năm 2011) tại Đại hội XI xác định phương hướng thứ hai (phương hướng phát triển nền kinh tế) phản ánh con đường đi lên chủ nghĩa xã hội ở nước ta là gì?", a:"Phát triển nền kinh tế thị trường định hướng xã hội chủ nghĩa", b:"Xây dựng nền văn hóa tiên tiến, đậm đà bản sắc dân tộc; xây dựng con người, nâng cao đời sống nhân dân, thực hiện tiến bộ và công bằng xã hội", c:"Bảo đảm vững chắc quốc phòng và an ninh quốc gia, trật tự, an toàn xã hội", d:"Thực hiện đường lối đối ngoại độc lập, tự chủ, hoà bình, hữu nghị, hợp tác và phát triển; chủ động và tích cực hội nhập quốc tế", ans:["A"]},
+  {id:118, ch:3, q:"Đâu là một trong những nội dung của mối quan hệ lớn cần nắm vững và giải quyết tốt trong xây dựng chủ nghĩa xã hội ở Việt Nam hiện nay?", a:"Giữa tăng trưởng kinh tế, thực hiện tiến bộ, công bằng xã hội, bảo vệ môi trường sống", b:"Giữa tăng trưởng kinh tế và phát triển văn hóa, thực hiện tiến bộ, bảo vệ môi trường, y tế, giáo dục", c:"Giữa tăng trưởng kinh tế và phát triển văn hóa, thực hiện tiến bộ, công bằng xã hội, bảo vệ môi trường", d:"Giữa tăng trưởng kinh tế và phát triển văn hóa, thực hiện tiến bộ, công bằng xã hội", ans:["C"], note:"Theo Cương lĩnh 2011 là đáp án D; tại Đại hội XIII bổ sung thêm 'bảo vệ môi trường' thành đáp án C."},
+  {id:119, ch:3, q:"Đại hội XIII của Đảng Cộng sản Việt Nam đã đề ra mục tiêu gì vào năm 2025 trên con đường xây dựng chủ nghĩa xã hội?", a:"Là nước đang phát triển, có công nghiệp theo hướng hiện đại, vượt qua mức thu nhập trung bình thấp", b:"Là nước phát triển, có công nghiệp hóa, hiện đại hóa cao, đạt mức thu nhập cao", c:"Là nước đang phát triển, có công nghiệp theo hướng hiện đại, đạt được mức thu nhập trung bình", d:"Là nước phát triển, có thành tựu khoa học - kỹ thuật hiện đại, phát triển nguồn lực nội sinh", ans:["A"]},
+  {id:120, ch:3, q:"Đại hội XIII của Đảng Cộng sản Việt Nam đã đề ra mục tiêu gì vào năm 2030 trên con đường xây dựng chủ nghĩa xã hội?", a:"Là nước đang phát triển, có thu nhập trung bình", b:"Là nước đang phát triển, có công nghiệp hiện đại, thu nhập trung bình cao", c:"Là nước phát triển, có thu nhập trung bình cao", d:"Là nước phát triển, có thu nhập cao", ans:["B"]},
+  {id:121, ch:3, q:"Đại hội XIII của Đảng Cộng sản Việt Nam đã đề ra mục tiêu gì vào năm 2045 trên con đường xây dựng chủ nghĩa xã hội?", a:"Trở thành nước phát triển, có kinh tế tri thức, thu nhập trung bình cao", b:"Trở thành con rồng Châu Á", c:"Trở thành nước phát triển, thu nhập cao", d:"Trở thành nước đang phát triển, có thu nhập trung bình cao", ans:["C"]}
+];
+
+const STORAGE_KEY = "mln131_quiz_pro_v2";
+let saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+let userState = saved.userState || {}; // { [id]: { selected:[], checked:false, isCorrect:false } }
+let starred = saved.starred || {};     // { [id]: true }
+let darkTheme = saved.darkTheme || false;
+
+let filtered = [...QUESTIONS];
+let currentIndex = 0;
+let mode = "practice"; // practice | flashcard | exam60 | exam20
+let examSubmitted = false;
+let flashRevealed = false;
+let timerInterval = null;
+let remainingSeconds = 0;
+
+const el = id => document.getElementById(id);
+
+function saveToStorage() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ userState, starred, darkTheme }));
+}
+
+function applyTheme() {
+  if (darkTheme) {
+    document.documentElement.setAttribute("data-theme", "dark");
+    el("themeToggleBtn").textContent = "☀️ Giao diện sáng";
+  } else {
+    document.documentElement.removeAttribute("data-theme");
+    el("themeToggleBtn").textContent = "🌙 Giao diện tối";
+  }
+}
+
+el("themeToggleBtn").addEventListener("click", () => {
+  darkTheme = !darkTheme;
+  applyTheme();
+  saveToStorage();
+});
+
+function isSameSet(arr1, arr2) {
+  if (!arr1 || !arr2 || arr1.length !== arr2.length) return false;
+  return [...arr1].sort().join(",") === [...arr2].sort().join(",");
+}
+
+function stopTimer() {
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = null;
+  el("timerDisplay").style.display = "none";
+}
+
+function startTimer(minutes) {
+  stopTimer();
+  remainingSeconds = minutes * 60;
+  el("timerDisplay").style.display = "inline-block";
+  updateTimerUI();
+  timerInterval = setInterval(() => {
+    remainingSeconds--;
+    updateTimerUI();
+    if (remainingSeconds <= 0) {
+      stopTimer();
+      alert("⏰ Đã hết thời gian làm bài! Hệ thống sẽ tự động chấm điểm.");
+      submitExam();
+    }
+  }, 1000);
+}
+
+function updateTimerUI() {
+  const m = String(Math.floor(remainingSeconds / 60)).padStart(2, "0");
+  const s = String(remainingSeconds % 60).padStart(2, "0");
+  el("timerDisplay").textContent = `⏱ ${m}:${s}`;
+}
+
+function applyFilter() {
+  if (mode === "exam60" || mode === "exam20") return;
+  const ch = el("chapterFilter").value;
+  const stFilter = el("statusFilter").value;
+  const kw = el("searchInput").value.trim().toLowerCase();
+
+  filtered = QUESTIONS.filter(item => {
+    const matchCh = ch === "all" || String(item.ch) === ch;
+    const matchKw = !kw || item.q.toLowerCase().includes(kw) ||
+      item.a.toLowerCase().includes(kw) || item.b.toLowerCase().includes(kw) ||
+      item.c.toLowerCase().includes(kw) || item.d.toLowerCase().includes(kw);
+
+    const st = userState[item.id];
+    let matchStatus = true;
+    if (stFilter === "unanswered") matchStatus = !st || !st.checked;
+    else if (stFilter === "wrong") matchStatus = st && st.checked && !isSameSet(st.selected, item.ans);
+    else if (stFilter === "starred") matchStatus = !!starred[item.id];
+
+    return matchCh && matchKw && matchStatus;
+  });
+
+  currentIndex = 0;
+  renderAll();
+}
+
+function renderQuestion() {
+  if (filtered.length === 0) {
+    el("questionText").textContent = "🎉 Không có câu hỏi nào trong mục lọc này!";
+    el("optionsList").innerHTML = "";
+    el("feedbackBox").className = "feedback-box";
+    el("multiActionWrap").style.display = "none";
+    return;
+  }
+
+  const item = filtered[currentIndex];
+  const st = userState[item.id] || { selected: [], checked: false };
+  const isExam = mode === "exam60" || mode === "exam20";
+  const showResult = (!isExam && st.checked) || (isExam && examSubmitted);
+
+  el("chapterBadge").textContent = `Chương ${item.ch} • Mã câu #${item.id}`;
+  el("multiBadge").style.display = item.multi ? "inline-block" : "none";
+  el("progressText").textContent = `Câu ${currentIndex + 1} / ${filtered.length}`;
+  el("questionText").textContent = item.q;
+
+  const starBtn = el("starBtn");
+  if (starred[item.id]) {
+    starBtn.className = "star-btn starred";
+    starBtn.textContent = "★ Đã đánh dấu";
+  } else {
+    starBtn.className = "star-btn";
+    starBtn.textContent = "☆ Đánh dấu";
+  }
+
+  if (mode === "flashcard") {
+    el("multiActionWrap").style.display = "none";
+    el("feedbackBox").className = "feedback-box";
+    const ansTexts = item.ans.map(k => `<strong>${k}.</strong> ${item[k.toLowerCase()]}`).join("<br>");
+    el("optionsList").innerHTML = `
+      <div class="flashcard-box" onclick="toggleFlashcard()">
+        ${flashRevealed
+          ? `<div style="color:var(--success);font-size:1.05rem;">✅ ĐÁP ÁN ĐÚNG:<br>${ansTexts}</div>
+             ${item.note ? `<div style="margin-top:8px;font-size:0.88rem;color:var(--muted);">📌 ${item.note}</div>` : ""}`
+          : `<div style="color:var(--muted);font-size:1rem;">👆 Nhấn vào đây (hoặc phím Space) để lật xem đáp án</div>`
+        }
+      </div>
+    `;
+    return;
+  }
+
+  const opts = [
+    { key: "A", text: item.a },
+    { key: "B", text: item.b },
+    { key: "C", text: item.c },
+    { key: "D", text: item.d }
+  ];
+
+  el("optionsList").innerHTML = opts.map(o => {
+    const isSel = st.selected.includes(o.key);
+    const isAns = item.ans.includes(o.key);
+    let cls = "option-item";
+    if (showResult) {
+      if (isAns) cls += " correct";
+      else if (isSel && !isAns) cls += " wrong";
+    } else if (isSel) {
+      cls += " selected";
+    }
+    return `
+      <div class="${cls}" onclick="selectOption('${o.key}')">
+        <div class="option-key">${o.key}</div>
+        <div>${o.text}</div>
+      </div>
+    `;
+  }).join("");
+
+  el("multiActionWrap").style.display = (item.multi && !isExam && !st.checked) ? "block" : "none";
+
+  const fb = el("feedbackBox");
+  if (showResult) {
+    const ok = isSameSet(st.selected, item.ans);
+    fb.className = `feedback-box show ${ok ? "ok" : "err"}`;
+    fb.innerHTML = `
+      <strong>${ok ? "✅ Chính xác!" : "❌ Chưa chính xác!"}</strong>
+      Đáp án đúng là: <strong>${item.ans.join(", ")}</strong>
+      ${item.note ? `<div style="margin-top:4px;font-size:0.86rem;">📌 <em>Giải thích: ${item.note}</em></div>` : ""}
+    `;
+  } else {
+    fb.className = "feedback-box";
+    fb.innerHTML = "";
+  }
+
+  el("prevBtn").disabled = currentIndex === 0;
+  el("nextBtn").disabled = currentIndex === filtered.length - 1;
+}
+
+window.toggleFlashcard = function() {
+  flashRevealed = !flashRevealed;
+  renderQuestion();
+};
+
+window.toggleStar = function() {
+  if (filtered.length === 0) return;
+  const item = filtered[currentIndex];
+  if (starred[item.id]) delete starred[item.id];
+  else starred[item.id] = true;
+  saveToStorage();
+  renderAll();
+};
+
+window.selectOption = function(key) {
+  if (filtered.length === 0 || mode === "flashcard") return;
+  const item = filtered[currentIndex];
+  const isExam = mode === "exam60" || mode === "exam20";
+  if (isExam && examSubmitted) return;
+
+  const st = userState[item.id] || { selected: [], checked: false };
+  if (!isExam && st.checked) return;
+
+  if (item.multi) {
+    if (st.selected.includes(key)) st.selected = st.selected.filter(k => k !== key);
+    else st.selected.push(key);
+  } else {
+    st.selected = [key];
+    if (!isExam) st.checked = true;
+  }
+  userState[item.id] = st;
+  saveToStorage();
+  renderAll();
+};
+
+function renderSidebar() {
+  let done = 0, cor = 0, wrg = 0, starCount = 0;
+  const isExam = mode === "exam60" || mode === "exam20";
+
+  filtered.forEach(item => {
+    if (starred[item.id]) starCount++;
+    const st = userState[item.id];
+    if (!st || st.selected.length === 0) return;
+    if (!isExam && st.checked) {
+      done++;
+      if (isSameSet(st.selected, item.ans)) cor++; else wrg++;
+    } else if (isExam) {
+      done++;
+      if (examSubmitted) {
+        if (isSameSet(st.selected, item.ans)) cor++; else wrg++;
+      }
+    }
+  });
+
+  el("statDone").textContent = `${done}/${filtered.length}`;
+  el("statCorrect").textContent = cor;
+  el("statWrong").textContent = wrg;
+  el("statStar").textContent = starCount;
+
+  const pct = filtered.length ? Math.round((done / filtered.length) * 100) : 0;
+  el("topProgressBar").style.width = `${pct}%`;
+
+  el("questionGrid").innerHTML = filtered.map((item, idx) => {
+    const st = userState[item.id];
+    let cls = "q-btn";
+    if (idx === currentIndex) cls += " active";
+    if (st && st.selected.length > 0) {
+      if ((!isExam && st.checked) || (isExam && examSubmitted)) {
+        cls += isSameSet(st.selected, item.ans) ? " done-ok" : " done-err";
+      } else {
+        cls += " done-wait";
+      }
+    }
+    const dot = starred[item.id] ? `<span class="star-dot">★</span>` : "";
+    return `<button class="${cls}" onclick="jumpTo(${idx})">${idx + 1}${dot}</button>`;
+  }).join("");
+}
+
+window.jumpTo = function(idx) {
+  currentIndex = idx;
+  flashRevealed = false;
+  renderAll();
+};
+
+function renderAll() {
+  renderQuestion();
+  renderSidebar();
+}
+
+el("checkMultiBtn").addEventListener("click", () => {
+  const item = filtered[currentIndex];
+  const st = userState[item.id] || { selected: [], checked: false };
+  if (st.selected.length === 0) return alert("Bạn hãy chọn ít nhất 1 phương án!");
+  st.checked = true;
+  userState[item.id] = st;
+  saveToStorage();
+  renderAll();
+});
+
+el("retryOneBtn").addEventListener("click", () => {
+  if (filtered.length === 0) return;
+  const item = filtered[currentIndex];
+  delete userState[item.id];
+  saveToStorage();
+  renderAll();
+});
+
+el("showAnswerBtn").addEventListener("click", () => {
+  if (filtered.length === 0) return;
+  const item = filtered[currentIndex];
+  userState[item.id] = { selected: [...item.ans], checked: true };
+  saveToStorage();
+  renderAll();
+});
+
+el("prevBtn").addEventListener("click", () => {
+  if (currentIndex > 0) { currentIndex--; flashRevealed = false; renderAll(); }
+});
+el("nextBtn").addEventListener("click", () => {
+  if (currentIndex < filtered.length - 1) { currentIndex++; flashRevealed = false; renderAll(); }
+});
+
+el("chapterFilter").addEventListener("change", applyFilter);
+el("statusFilter").addEventListener("change", applyFilter);
+el("searchInput").addEventListener("input", applyFilter);
+
+el("modeSelect").addEventListener("change", e => {
+  mode = e.target.value;
+  examSubmitted = false;
+  flashRevealed = false;
+  stopTimer();
+
+  const isExam = mode === "exam60" || mode === "exam20";
+  el("submitExamBtn").style.display = isExam ? "inline-block" : "none";
+  el("showAnswerBtn").style.display = isExam ? "none" : "inline-block";
+
+  if (mode === "exam60" || mode === "exam20") {
+    const count = mode === "exam60" ? 60 : 20;
+    const pool = [...QUESTIONS].sort(() => Math.random() - 0.5).slice(0, count);
+    pool.forEach(q => delete userState[q.id]);
+    filtered = pool;
+    currentIndex = 0;
+    startTimer(count);
+    renderAll();
+  } else {
+    applyFilter();
+  }
+});
+
+function submitExam() {
+  stopTimer();
+  examSubmitted = true;
+  renderAll();
+  let cor = 0;
+  filtered.forEach(item => {
+    const st = userState[item.id];
+    if (st && isSameSet(st.selected, item.ans)) cor++;
+  });
+  const score = ((cor / filtered.length) * 10).toFixed(2);
+  alert(`🎯 KẾT QUẢ BÀI THI:\n- Số câu đúng: ${cor} / ${filtered.length}\n- Điểm quy đổi: ${score} / 10 điểm`);
+}
+
+el("submitExamBtn").addEventListener("click", () => {
+  if (confirm("Bạn có chắc chắn muốn nộp bài thi ngay bây giờ?")) submitExam();
+});
+
+el("shuffleBtn").addEventListener("click", () => {
+  for (let i = filtered.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
+  }
+  currentIndex = 0;
+  renderAll();
+});
+
+el("resetBtn").addEventListener("click", () => {
+  if (!confirm("Bạn có chắc muốn xóa toàn bộ kết quả đã làm để bắt đầu lại từ đầu?")) return;
+  userState = {};
+  examSubmitted = false;
+  saveToStorage();
+  applyFilter();
+});
+
+// Phím tắt bàn phím
+document.addEventListener("keydown", e => {
+  if (document.activeElement === el("searchInput")) return;
+  const k = e.key.toUpperCase();
+  if (k === "1" || k === "A") selectOption("A");
+  else if (k === "2" || k === "B") selectOption("B");
+  else if (k === "3" || k === "C") selectOption("C");
+  else if (k === "4" || k === "D") selectOption("D");
+  else if (e.key === "ArrowRight") el("nextBtn").click();
+  else if (e.key === "ArrowLeft") el("prevBtn").click();
+  else if (k === "S") toggleStar();
+  else if (e.code === "Space") {
+    e.preventDefault();
+    if (mode === "flashcard") toggleFlashcard();
+    else if (el("multiActionWrap").style.display === "block") el("checkMultiBtn").click();
+    else el("showAnswerBtn").click();
+  }
+});
+
+applyTheme();
+renderAll();
+</script>
+</body>
+</html>
