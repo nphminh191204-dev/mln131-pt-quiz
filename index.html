@@ -2,9 +2,11 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MLN131 Quiz - Ôn Tập Chủ Nghĩa Xã Hội Khoa Học (Chương 1, 2, 3)</title>
-  <meta name="description" content="Hệ thống ôn tập trắc nghiệm Chủ nghĩa xã hội khoa học (MLN131) - Chương 1, 2, 3 có lọc câu sai, thi thử đếm ngược và phím tắt." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#1e3a8a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>MLN131 Quiz - Ôn Tập Chủ Nghĩa Xã Hội Khoa Học</title>
   <style>
     :root {
       --primary: #2563eb;
@@ -22,6 +24,8 @@
       --muted: #64748b;
       --border: #e2e8f0;
       --shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+      --q-font-size: 1.1rem;
+      --opt-font-size: 0.96rem;
     }
     [data-theme="dark"] {
       --primary: #3b82f6;
@@ -33,60 +37,73 @@
       --danger-bg: rgba(239, 68, 68, 0.16);
       --warning: #f59e0b;
       --warning-bg: rgba(245, 158, 11, 0.18);
-      --bg: #0f172a;
+      --bg: #0b1120;
       --card: #1e293b;
       --text: #f8fafc;
       --muted: #94a3b8;
       --border: #334155;
-      --shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
       background: var(--bg);
       color: var(--text);
       line-height: 1.6;
       transition: background 0.2s, color 0.2s;
-      padding-bottom: 50px;
+      padding-bottom: 90px;
+      overflow-x: hidden;
     }
+
+    /* HEADER */
     header {
       background: linear-gradient(135deg, #1e3a8a, #2563eb);
       color: #fff;
-      padding: 18px 20px;
+      padding: 14px 16px;
       box-shadow: var(--shadow);
       position: sticky;
       top: 0;
-      z-index: 50;
+      z-index: 60;
     }
     .header-inner {
-      max-width: 1180px;
+      max-width: 1200px;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
+      gap: 10px;
     }
-    .brand h1 { font-size: 1.25rem; font-weight: 700; }
-    .brand p { font-size: 0.82rem; opacity: 0.9; }
+    .brand h1 { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em; }
+    .brand p { font-size: 0.78rem; opacity: 0.88; }
     .header-controls {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+    }
+    .icon-btn {
+      background: rgba(255,255,255,0.16);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.25);
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      white-space: nowrap;
     }
     .timer-pill {
-      background: rgba(255,255,255,0.18);
-      padding: 6px 14px;
+      background: #ef4444;
+      color: #fff;
+      padding: 6px 12px;
       border-radius: 999px;
       font-weight: 700;
-      font-size: 0.95rem;
+      font-size: 0.88rem;
       display: none;
     }
     .progress-bar-wrap {
-      width: 100%;
+      max-width: 1200px;
+      margin: 10px auto 0;
       height: 5px;
-      background: rgba(255,255,255,0.2);
-      margin-top: 12px;
+      background: rgba(255,255,255,0.22);
       border-radius: 999px;
       overflow: hidden;
     }
@@ -96,24 +113,42 @@
       width: 0%;
       transition: width 0.25s ease;
     }
+
+    /* MAIN LAYOUT */
     .container {
-      max-width: 1180px;
-      margin: 20px auto;
-      padding: 0 16px;
+      max-width: 1200px;
+      margin: 16px auto;
+      padding: 0 14px;
       display: grid;
-      grid-template-columns: 1fr 330px;
+      grid-template-columns: 1fr 340px;
       gap: 20px;
+      align-items: start;
     }
-    @media (max-width: 900px) {
-      .container { grid-template-columns: 1fr; }
-    }
-    .toolbar {
+
+    /* TOOLBAR / FILTER */
+    .toolbar-wrapper {
       grid-column: 1 / -1;
       background: var(--card);
-      padding: 14px 16px;
       border-radius: 14px;
       border: 1px solid var(--border);
       box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .toolbar-mobile-toggle {
+      display: none;
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--card);
+      border: none;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      font-weight: 600;
+      text-align: left;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .toolbar {
+      padding: 14px 16px;
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
@@ -127,8 +162,8 @@
       align-items: center;
     }
     select, input[type="text"], button {
-      padding: 8px 12px;
-      border-radius: 8px;
+      padding: 9px 12px;
+      border-radius: 9px;
       border: 1px solid var(--border);
       background: var(--card);
       color: var(--text);
@@ -139,21 +174,19 @@
     input[type="text"] { min-width: 210px; }
     input[type="text"]:focus, select:focus { border-color: var(--primary); }
     button { cursor: pointer; font-weight: 500; }
-    button:hover:not(:disabled) { filter: brightness(0.95); }
-    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    button:active:not(:disabled) { transform: scale(0.98); }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
     .btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
     .btn-success { background: var(--success); color: #fff; border-color: var(--success); }
-    .btn-warning { background: var(--warning); color: #fff; border-color: var(--warning); }
-    .btn-danger { background: var(--danger); color: #fff; border-color: var(--danger); }
+
+    /* QUIZ CARD */
     .quiz-card {
       background: var(--card);
-      border-radius: 14px;
+      border-radius: 16px;
       border: 1px solid var(--border);
-      padding: 24px;
+      padding: 22px;
       box-shadow: var(--shadow);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      touch-action: pan-y;
     }
     .question-meta {
       display: flex;
@@ -180,7 +213,7 @@
     .star-btn {
       border: 1px solid var(--border);
       background: transparent;
-      padding: 5px 10px;
+      padding: 6px 12px;
       border-radius: 8px;
       font-size: 0.85rem;
     }
@@ -191,25 +224,28 @@
       font-weight: 700;
     }
     .question-title {
-      font-size: 1.14rem;
-      font-weight: 600;
+      font-size: var(--q-font-size);
+      font-weight: 650;
       margin-bottom: 18px;
+      line-height: 1.5;
     }
     .options-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 11px;
     }
     .option-item {
       display: flex;
       align-items: flex-start;
       gap: 12px;
-      padding: 13px 15px;
+      padding: 14px 15px;
+      min-height: 52px;
       border: 1.5px solid var(--border);
-      border-radius: 10px;
+      border-radius: 12px;
       cursor: pointer;
       transition: all 0.15s;
       user-select: none;
+      font-size: var(--opt-font-size);
     }
     .option-item:hover { border-color: var(--primary); }
     .option-item.selected {
@@ -226,33 +262,36 @@
       background: var(--danger-bg);
     }
     .option-key {
-      min-width: 28px;
-      height: 28px;
-      border-radius: 6px;
+      min-width: 30px;
+      height: 30px;
+      border-radius: 8px;
       background: var(--border);
       color: var(--text);
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 700;
-      font-size: 0.84rem;
+      font-size: 0.86rem;
       flex-shrink: 0;
+      margin-top: 1px;
     }
     .option-item.selected .option-key { background: var(--primary); color: #fff; }
     .option-item.correct .option-key { background: var(--success); color: #fff; }
     .option-item.wrong .option-key { background: var(--danger); color: #fff; }
+
     .feedback-box {
       margin-top: 18px;
       padding: 14px 16px;
-      border-radius: 10px;
+      border-radius: 12px;
       font-size: 0.92rem;
       display: none;
     }
     .feedback-box.show { display: block; }
     .feedback-box.ok { background: var(--success-bg); border: 1px solid var(--success); }
     .feedback-box.err { background: var(--danger-bg); border: 1px solid var(--danger); }
+
     .nav-actions {
-      margin-top: 24px;
+      margin-top: 22px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -267,13 +306,16 @@
       color: var(--muted);
       text-align: center;
     }
+
+    /* SIDEBAR & DRAWER */
     .sidebar {
       background: var(--card);
-      border-radius: 14px;
+      border-radius: 16px;
       border: 1px solid var(--border);
       padding: 18px;
       box-shadow: var(--shadow);
-      height: fit-content;
+      position: sticky;
+      top: 90px;
     }
     .stats-grid {
       display: grid;
@@ -284,7 +326,7 @@
     }
     .stat-box {
       padding: 8px 4px;
-      border-radius: 8px;
+      border-radius: 9px;
       border: 1px solid var(--border);
       font-size: 0.75rem;
     }
@@ -293,15 +335,15 @@
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 6px;
-      max-height: 370px;
+      max-height: 360px;
       overflow-y: auto;
       padding-right: 4px;
     }
     .q-btn {
-      padding: 7px 0;
+      padding: 8px 0;
       text-align: center;
-      font-size: 0.78rem;
-      border-radius: 6px;
+      font-size: 0.8rem;
+      border-radius: 7px;
       border: 1px solid var(--border);
       background: var(--card);
       color: var(--text);
@@ -319,12 +361,79 @@
       color: var(--warning);
     }
     .flashcard-box {
-      padding: 28px 20px;
+      padding: 32px 20px;
       border: 2px dashed var(--border);
-      border-radius: 12px;
+      border-radius: 14px;
       text-align: center;
       cursor: pointer;
       margin-top: 8px;
+    }
+
+    /* STICKY BOTTOM BAR FOR MOBILE */
+    .mobile-bottom-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+      z-index: 70;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .mobile-bottom-bar button {
+      flex: 1;
+      padding: 11px 8px;
+      font-size: 0.86rem;
+      border-radius: 10px;
+    }
+    .drawer-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 80;
+    }
+
+    /* RESPONSIVE BREAKPOINTS */
+    @media (max-width: 920px) {
+      .container { grid-template-columns: 1fr; }
+      .shortcut-hint { display: none; }
+      .nav-actions { display: none; }
+      .mobile-bottom-bar { display: flex; }
+      .toolbar-mobile-toggle { display: flex; }
+      .toolbar.collapsed { display: none; }
+      .filter-group { width: 100%; }
+      .filter-group select, .filter-group input[type="text"] { flex: 1; min-width: 140px; }
+
+      /* Chuyển Sidebar thành Bottom Sheet Drawer trên Mobile/Tablet dọc */
+      .sidebar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: auto;
+        z-index: 90;
+        border-radius: 20px 20px 0 0;
+        max-height: 80vh;
+        transform: translateY(105%);
+        transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+        padding-bottom: calc(20px + env(safe-area-inset-bottom));
+      }
+      .sidebar.open { transform: translateY(0); }
+      .drawer-backdrop.open { display: block; }
+      .question-grid { grid-template-columns: repeat(6, 1fr); max-height: 48vh; }
+    }
+
+    @media (max-width: 480px) {
+      .brand h1 { font-size: 1rem; }
+      . brand p { display: none; }
+      .quiz-card { padding: 16px; }
+      .question-grid { grid-template-columns: repeat(5, 1fr); }
     }
   </style>
 </head>
@@ -333,63 +442,72 @@
 <header>
   <div class="header-inner">
     <div class="brand">
-      <h1>🎓 MLN131 QUIZ — CHỦ NGHĨA XÃ HỘI KHOA HỌC</h1>
-      <p>121 Câu hỏi Chương 1, 2, 3 • Tự động lưu tiến độ • Hỗ trợ phím tắt</p>
+      <h1>🎓 MLN131 QUIZ</h1>
+      <p>121 Câu hỏi Chương 1, 2, 3 • Hỗ trợ vuốt chuyển câu trên Mobile</p>
     </div>
     <div class="header-controls">
       <div class="timer-pill" id="timerDisplay">⏱ 60:00</div>
-      <button id="themeToggleBtn">🌙 Giao diện tối</button>
+      <button class="icon-btn" id="fontDecBtn" title="Giảm cỡ chữ">A-</button>
+      <button class="icon-btn" id="fontIncBtn" title="Tăng cỡ chữ">A+</button>
+      <button class="icon-btn" id="themeToggleBtn">🌙 Tối</button>
     </div>
-    <div class="progress-bar-wrap">
-      <div class="progress-bar-fill" id="topProgressBar"></div>
-    </div>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="topProgressBar"></div>
   </div>
 </header>
 
 <div class="container">
-  <div class="toolbar">
-    <div class="filter-group">
-      <select id="chapterFilter">
-        <option value="all">📚 Tất cả chương (121 câu)</option>
-        <option value="1">Chương 1: Nhập môn CNXHKH (33 câu)</option>
-        <option value="2">Chương 2: Sứ mệnh lịch sử của GCCN (40 câu)</option>
-        <option value="3">Chương 3: CNXH và Thời kỳ quá độ (48 câu)</option>
-      </select>
+  <div class="toolbar-wrapper">
+    <button class="toolbar-mobile-toggle" id="filterToggleBtn">
+      <span>⚙️ Bộ lọc chương, chế độ thi & tìm kiếm</span>
+      <span id="filterToggleIcon">▼ Mở</span>
+    </button>
+    <div class="toolbar collapsed" id="toolbarContent">
+      <div class="filter-group">
+        <select id="chapterFilter">
+          <option value="all">📚 Tất cả chương (121 câu)</option>
+          <option value="1">Chương 1: Nhập môn CNXHKH (33 câu)</option>
+          <option value="2">Chương 2: Sứ mệnh lịch sử GCCN (40 câu)</option>
+          <option value="3">Chương 3: CNXH & Thời kỳ quá độ (48 câu)</option>
+        </select>
 
-      <select id="statusFilter">
-        <option value="all">🔍 Tất cả trạng thái</option>
-        <option value="unanswered">⏳ Câu chưa làm</option>
-        <option value="wrong">❌ Câu làm SAI</option>
-        <option value="starred">⭐ Câu đã đánh dấu sao</option>
-      </select>
+        <select id="statusFilter">
+          <option value="all">🔍 Tất cả trạng thái</option>
+          <option value="unanswered">⏳ Câu chưa làm</option>
+          <option value="wrong">❌ Câu làm SAI</option>
+          <option value="starred">⭐ Câu đã đánh dấu sao</option>
+        </select>
 
-      <select id="modeSelect">
-        <option value="practice">🎯 Chế độ: Ôn tập (Chấm ngay)</option>
-        <option value="flashcard">🗂️ Chế độ: Flashcard (Lật thẻ)</option>
-        <option value="exam60">📝 Thi thử FE (60 câu / 60 phút)</option>
-        <option value="exam20">⚡ Thi thử PT (20 câu / 20 phút)</option>
-      </select>
+        <select id="modeSelect">
+          <option value="practice">🎯 Chế độ: Ôn tập (Chấm ngay)</option>
+          <option value="flashcard">🗂️ Chế độ: Flashcard (Lật thẻ)</option>
+          <option value="exam60">📝 Thi thử FE (60 câu / 60 phút)</option>
+          <option value="exam20">⚡ Thi thử PT (20 câu / 20 phút)</option>
+        </select>
 
-      <input type="text" id="searchInput" placeholder="🔎 Tìm từ khóa câu hỏi..." />
-    </div>
+        <input type="text" id="searchInput" placeholder="🔎 Tìm từ khóa câu hỏi..." />
+      </div>
 
-    <div class="filter-group">
-      <button id="shuffleBtn">🔀 Trộn câu</button>
-      <button id="resetBtn">🗑️ Xóa lịch sử làm</button>
-      <button id="submitExamBtn" class="btn-success" style="display:none;">✅ Nộp bài thi</button>
+      <div class="filter-group">
+        <button id="shuffleBtn">🔀 Trộn câu</button>
+        <button id="syncBtn" title="Sao lưu hoặc chuyển tiến độ sang thiết bị khác">☁️ Đồng bộ</button>
+        <button id="resetBtn">🗑️ Xóa lịch sử</button>
+        <button id="submitExamBtn" class="btn-success" style="display:none;">✅ Nộp bài thi</button>
+      </div>
     </div>
   </div>
 
-  <main class="quiz-card">
+  <main class="quiz-card" id="quizTouchArea">
     <div>
       <div class="question-meta">
         <div>
           <span class="badge" id="chapterBadge">Chương 1</span>
           <span class="badge multi" id="multiBadge" style="display:none;">Chọn nhiều đáp án</span>
         </div>
-        <div style="display:flex; align-items:center; gap:10px;">
+        <div style="display:flex; align-items:center; gap:8px;">
           <button class="star-btn" id="starBtn" onclick="toggleStar()">☆ Đánh dấu</button>
-          <span id="progressText" style="font-size:0.88rem; color:var(--muted);">Câu 1 / 121</span>
+          <span id="progressText" style="font-size:0.85rem; color:var(--muted); font-weight:600;">1 / 121</span>
         </div>
       </div>
 
@@ -397,7 +515,7 @@
       <div class="options-list" id="optionsList"></div>
 
       <div id="multiActionWrap" style="margin-top: 14px; display:none;">
-        <button id="checkMultiBtn" class="btn-primary">✔️ Kiểm tra đáp án (Space)</button>
+        <button id="checkMultiBtn" class="btn-primary" style="width:100%; padding:12px;">✔️ Kiểm tra đáp án</button>
       </div>
 
       <div class="feedback-box" id="feedbackBox"></div>
@@ -411,13 +529,18 @@
         <button id="nextBtn" class="btn-primary">Câu tiếp (→) ➡</button>
       </div>
       <div class="shortcut-hint">
-        ⌨️ Phím tắt: <strong>1-4</strong> hoặc <strong>A-D</strong> chọn đáp án • <strong>←/→</strong> chuyển câu • <strong>Space</strong> kiểm tra/xem đáp án • <strong>S</strong> đánh dấu sao
+        ⌨️ Phím tắt PC: <strong>1-4</strong> hoặc <strong>A-D</strong> chọn đáp án • <strong>←/→</strong> chuyển câu • <strong>Space</strong> kiểm tra/xem đáp án • <strong>S</strong> đánh dấu sao
       </div>
     </div>
   </main>
 
-  <aside class="sidebar">
-    <h3 style="font-size: 0.98rem; margin-bottom: 10px;">📊 Thống kê bộ câu hỏi hiện tại</h3>
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+
+  <aside class="sidebar" id="sidebarDrawer">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+      <h3 style="font-size: 0.98rem;">📊 Bảng câu hỏi & Tiến độ</h3>
+      <button id="closeDrawerBtn" style="display:none; padding:4px 10px; font-size:0.8rem;">✕ Đóng</button>
+    </div>
     <div class="stats-grid">
       <div class="stat-box">Đã làm<strong id="statDone">0</strong></div>
       <div class="stat-box" style="color:var(--success)">Đúng<strong id="statCorrect">0</strong></div>
@@ -427,6 +550,14 @@
     <div class="question-grid" id="questionGrid"></div>
   </aside>
 </div>
+
+<!-- THANH ĐIỀU HƯỚNG CỐ ĐỊNH DƯỚI ĐÁY CHO MOBILE / TABLET -->
+<nav class="mobile-bottom-bar">
+  <button id="mPrevBtn">⬅ Trước</button>
+  <button id="mShowAnsBtn">💡 Đáp án</button>
+  <button id="mGridBtn">📋 DS Câu</button>
+  <button id="mNextBtn" class="btn-primary">Tiếp ➡</button>
+</nav>
 
 <script>
 const QUESTIONS = [
@@ -558,15 +689,16 @@ const QUESTIONS = [
   {id:121, ch:3, q:"Đại hội XIII của Đảng Cộng sản Việt Nam đã đề ra mục tiêu gì vào năm 2045 trên con đường xây dựng chủ nghĩa xã hội?", a:"Trở thành nước phát triển, có kinh tế tri thức, thu nhập trung bình cao", b:"Trở thành con rồng Châu Á", c:"Trở thành nước phát triển, thu nhập cao", d:"Trở thành nước đang phát triển, có thu nhập trung bình cao", ans:["C"]}
 ];
 
-const STORAGE_KEY = "mln131_quiz_pro_v2";
+const STORAGE_KEY = "mln131_quiz_pro_v3";
 let saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-let userState = saved.userState || {}; // { [id]: { selected:[], checked:false, isCorrect:false } }
-let starred = saved.starred || {};     // { [id]: true }
+let userState = saved.userState || {};
+let starred = saved.starred || {};
 let darkTheme = saved.darkTheme || false;
+let fontScale = saved.fontScale || 1;
 
 let filtered = [...QUESTIONS];
 let currentIndex = 0;
-let mode = "practice"; // practice | flashcard | exam60 | exam20
+let mode = "practice";
 let examSubmitted = false;
 let flashRevealed = false;
 let timerInterval = null;
@@ -575,24 +707,54 @@ let remainingSeconds = 0;
 const el = id => document.getElementById(id);
 
 function saveToStorage() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({ userState, starred, darkTheme }));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ userState, starred, darkTheme, fontScale }));
 }
 
-function applyTheme() {
+function applySettings() {
   if (darkTheme) {
     document.documentElement.setAttribute("data-theme", "dark");
-    el("themeToggleBtn").textContent = "☀️ Giao diện sáng";
+    el("themeToggleBtn").textContent = "☀️ Sáng";
   } else {
     document.documentElement.removeAttribute("data-theme");
-    el("themeToggleBtn").textContent = "🌙 Giao diện tối";
+    el("themeToggleBtn").textContent = "🌙 Tối";
   }
+  document.documentElement.style.setProperty("--q-font-size", `${(1.1 * fontScale).toFixed(2)}rem`);
+  document.documentElement.style.setProperty("--opt-font-size", `${(0.96 * fontScale).toFixed(2)}rem`);
 }
 
 el("themeToggleBtn").addEventListener("click", () => {
   darkTheme = !darkTheme;
-  applyTheme();
+  applySettings();
   saveToStorage();
 });
+
+el("fontIncBtn").addEventListener("click", () => {
+  if (fontScale < 1.35) { fontScale += 0.08; applySettings(); saveToStorage(); }
+});
+el("fontDecBtn").addEventListener("click", () => {
+  if (fontScale > 0.85) { fontScale -= 0.08; applySettings(); saveToStorage(); }
+});
+
+// Toggle bộ lọc trên Mobile
+el("filterToggleBtn").addEventListener("click", () => {
+  const tb = el("toolbarContent");
+  const isCol = tb.classList.toggle("collapsed");
+  el("filterToggleIcon").textContent = isCol ? "▼ Mở" : "▲ Thu gọn";
+});
+
+// Drawer danh sách câu hỏi trên Mobile
+function openDrawer() {
+  el("sidebarDrawer").classList.add("open");
+  el("drawerBackdrop").classList.add("open");
+  el("closeDrawerBtn").style.display = "inline-block";
+}
+function closeDrawer() {
+  el("sidebarDrawer").classList.remove("open");
+  el("drawerBackdrop").classList.remove("open");
+}
+el("mGridBtn").addEventListener("click", openDrawer);
+el("closeDrawerBtn").addEventListener("click", closeDrawer);
+el("drawerBackdrop").addEventListener("click", closeDrawer);
 
 function isSameSet(arr1, arr2) {
   if (!arr1 || !arr2 || arr1.length !== arr2.length) return false;
@@ -666,18 +828,18 @@ function renderQuestion() {
   const isExam = mode === "exam60" || mode === "exam20";
   const showResult = (!isExam && st.checked) || (isExam && examSubmitted);
 
-  el("chapterBadge").textContent = `Chương ${item.ch} • Mã câu #${item.id}`;
+  el("chapterBadge").textContent = `Chương ${item.ch} • #${item.id}`;
   el("multiBadge").style.display = item.multi ? "inline-block" : "none";
-  el("progressText").textContent = `Câu ${currentIndex + 1} / ${filtered.length}`;
+  el("progressText").textContent = `${currentIndex + 1} / ${filtered.length}`;
   el("questionText").textContent = item.q;
 
   const starBtn = el("starBtn");
   if (starred[item.id]) {
     starBtn.className = "star-btn starred";
-    starBtn.textContent = "★ Đã đánh dấu";
+    starBtn.textContent = "★ Đã lưu";
   } else {
     starBtn.className = "star-btn";
-    starBtn.textContent = "☆ Đánh dấu";
+    starBtn.textContent = "☆ Lưu câu";
   }
 
   if (mode === "flashcard") {
@@ -689,7 +851,7 @@ function renderQuestion() {
         ${flashRevealed
           ? `<div style="color:var(--success);font-size:1.05rem;">✅ ĐÁP ÁN ĐÚNG:<br>${ansTexts}</div>
              ${item.note ? `<div style="margin-top:8px;font-size:0.88rem;color:var(--muted);">📌 ${item.note}</div>` : ""}`
-          : `<div style="color:var(--muted);font-size:1rem;">👆 Nhấn vào đây (hoặc phím Space) để lật xem đáp án</div>`
+          : `<div style="color:var(--muted);font-size:1rem;">👆 Chạm vào thẻ (hoặc nhấn Space) để lật xem đáp án</div>`
         }
       </div>
     `;
@@ -737,8 +899,12 @@ function renderQuestion() {
     fb.innerHTML = "";
   }
 
-  el("prevBtn").disabled = currentIndex === 0;
-  el("nextBtn").disabled = currentIndex === filtered.length - 1;
+  const isFirst = currentIndex === 0;
+  const isLast = currentIndex === filtered.length - 1;
+  el("prevBtn").disabled = isFirst;
+  el("nextBtn").disabled = isLast;
+  el("mPrevBtn").disabled = isFirst;
+  el("mNextBtn").disabled = isLast;
 }
 
 window.toggleFlashcard = function() {
@@ -799,6 +965,7 @@ function renderSidebar() {
   el("statCorrect").textContent = cor;
   el("statWrong").textContent = wrg;
   el("statStar").textContent = starCount;
+  el("mGridBtn").textContent = `📋 ${currentIndex + 1}/${filtered.length}`;
 
   const pct = filtered.length ? Math.round((done / filtered.length) * 100) : 0;
   el("topProgressBar").style.width = `${pct}%`;
@@ -822,6 +989,7 @@ function renderSidebar() {
 window.jumpTo = function(idx) {
   currentIndex = idx;
   flashRevealed = false;
+  closeDrawer();
   renderAll();
 };
 
@@ -829,6 +997,29 @@ function renderAll() {
   renderQuestion();
   renderSidebar();
 }
+
+function goPrev() {
+  if (currentIndex > 0) { currentIndex--; flashRevealed = false; renderAll(); window.scrollTo({top:0, behavior:"smooth"}); }
+}
+function goNext() {
+  if (currentIndex < filtered.length - 1) { currentIndex++; flashRevealed = false; renderAll(); window.scrollTo({top:0, behavior:"smooth"}); }
+}
+function revealCurrentAnswer() {
+  if (filtered.length === 0) return;
+  const isExam = mode === "exam60" || mode === "exam20";
+  if (isExam && !examSubmitted) return alert("Đang trong chế độ Thi thử, hãy nộp bài để xem đáp án!");
+  const item = filtered[currentIndex];
+  userState[item.id] = { selected: [...item.ans], checked: true };
+  saveToStorage();
+  renderAll();
+}
+
+el("prevBtn").addEventListener("click", goPrev);
+el("nextBtn").addEventListener("click", goNext);
+el("mPrevBtn").addEventListener("click", goPrev);
+el("mNextBtn").addEventListener("click", goNext);
+el("showAnswerBtn").addEventListener("click", revealCurrentAnswer);
+el("mShowAnsBtn").addEventListener("click", revealCurrentAnswer);
 
 el("checkMultiBtn").addEventListener("click", () => {
   const item = filtered[currentIndex];
@@ -848,20 +1039,41 @@ el("retryOneBtn").addEventListener("click", () => {
   renderAll();
 });
 
-el("showAnswerBtn").addEventListener("click", () => {
-  if (filtered.length === 0) return;
-  const item = filtered[currentIndex];
-  userState[item.id] = { selected: [...item.ans], checked: true };
-  saveToStorage();
-  renderAll();
+// Đồng bộ tiến độ giữa các thiết bị
+el("syncBtn").addEventListener("click", () => {
+  const code = btoa(unescape(encodeURIComponent(JSON.stringify({ userState, starred }))));
+  const input = prompt("☁️ ĐỒNG BỘ TIẾN ĐỘ ĐA THIẾT BỊ:\n- Copy mã bên dưới để dán sang thiết bị khác.\n- Hoặc dán mã từ thiết bị khác vào ô này rồi bấm OK:", code);
+  if (input && input !== code) {
+    try {
+      const parsed = JSON.parse(decodeURIComponent(escape(atob(input.trim()))));
+      if (parsed.userState) userState = parsed.userState;
+      if (parsed.starred) starred = parsed.starred;
+      saveToStorage();
+      applyFilter();
+      alert("✅ Đã đồng bộ tiến độ học tập thành công!");
+    } catch (err) {
+      alert("❌ Mã đồng bộ không hợp lệ!");
+    }
+  }
 });
 
-el("prevBtn").addEventListener("click", () => {
-  if (currentIndex > 0) { currentIndex--; flashRevealed = false; renderAll(); }
-});
-el("nextBtn").addEventListener("click", () => {
-  if (currentIndex < filtered.length - 1) { currentIndex++; flashRevealed = false; renderAll(); }
-});
+// Hỗ trợ cử chỉ vuốt trái/phải trên màn hình cảm ứng (Mobile/Tablet)
+let touchStartX = 0;
+let touchStartY = 0;
+const touchArea = el("quizTouchArea");
+touchArea.addEventListener("touchstart", e => {
+  touchStartX = e.changedTouches[0].screenX;
+  touchStartY = e.changedTouches[0].screenY;
+}, { passive: true });
+
+touchArea.addEventListener("touchend", e => {
+  const dx = e.changedTouches[0].screenX - touchStartX;
+  const dy = e.changedTouches[0].screenY - touchStartY;
+  if (Math.abs(dx) > 65 && Math.abs(dx) > Math.abs(dy) * 1.8) {
+    if (dx < 0) goNext();
+    else goPrev();
+  }
+}, { passive: true });
 
 el("chapterFilter").addEventListener("change", applyFilter);
 el("statusFilter").addEventListener("change", applyFilter);
@@ -877,7 +1089,7 @@ el("modeSelect").addEventListener("change", e => {
   el("submitExamBtn").style.display = isExam ? "inline-block" : "none";
   el("showAnswerBtn").style.display = isExam ? "none" : "inline-block";
 
-  if (mode === "exam60" || mode === "exam20") {
+  if (isExam) {
     const count = mode === "exam60" ? 60 : 20;
     const pool = [...QUESTIONS].sort(() => Math.random() - 0.5).slice(0, count);
     pool.forEach(q => delete userState[q.id]);
@@ -924,7 +1136,7 @@ el("resetBtn").addEventListener("click", () => {
   applyFilter();
 });
 
-// Phím tắt bàn phím
+// Phím tắt bàn phím cho PC/Laptop
 document.addEventListener("keydown", e => {
   if (document.activeElement === el("searchInput")) return;
   const k = e.key.toUpperCase();
@@ -932,18 +1144,18 @@ document.addEventListener("keydown", e => {
   else if (k === "2" || k === "B") selectOption("B");
   else if (k === "3" || k === "C") selectOption("C");
   else if (k === "4" || k === "D") selectOption("D");
-  else if (e.key === "ArrowRight") el("nextBtn").click();
-  else if (e.key === "ArrowLeft") el("prevBtn").click();
+  else if (e.key === "ArrowRight") goNext();
+  else if (e.key === "ArrowLeft") goPrev();
   else if (k === "S") toggleStar();
   else if (e.code === "Space") {
     e.preventDefault();
     if (mode === "flashcard") toggleFlashcard();
     else if (el("multiActionWrap").style.display === "block") el("checkMultiBtn").click();
-    else el("showAnswerBtn").click();
+    else revealCurrentAnswer();
   }
 });
 
-applyTheme();
+applySettings();
 renderAll();
 </script>
 </body>
